@@ -1,0 +1,71 @@
+name: Test hub UI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - public/index.html
+      - public/assets/**
+      - public/sites.json
+      - public/project-metadata.json
+      - public/previews/covers/index.json
+      - scripts/test-ui.mjs
+      - scripts/audit-ux.mjs
+      - scripts/audit-assets.mjs
+      - .github/workflows/test-ui.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: hub-ui-tests
+  cancel-in-progress: true
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check public/assets/app.js
+          node --check public/assets/explorer.js
+          node --check public/assets/atlas.js
+          node --check public/assets/vendor/three.module.js
+          node --check public/assets/vendor/three.core.js
+          node --check scripts/capture-previews.mjs
+          node --check scripts/cache-project-covers.mjs
+          node --check scripts/test-ui.mjs
+          node --check scripts/audit-ux.mjs
+          node --check scripts/audit-assets.mjs
+
+      - name: Check for duplicate image files
+        run: node scripts/audit-assets.mjs
+
+      - name: Install test browser
+        run: |
+          npm install --no-save --no-package-lock playwright@latest axe-core@latest
+          npx playwright install --with-deps chromium
+
+      - name: Test desktop and mobile interface
+        run: node scripts/test-ui.mjs
+      - name: Audit desktop, tablet and mobile layouts
+        if: always()
+        run: node scripts/audit-ux.mjs
+      - name: Save UX report and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ux-audit-screenshots
+          path: audit-output/
+          retention-days: 14

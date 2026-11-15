@@ -1,0 +1,1745 @@
+/* Minimal directory, inspired by the straightforward layout of Windhawk.
+   The site keeps its own identity, real screenshots and original behavior. */
+:root {
+  color-scheme:dark;
+  --bg:#161616;
+  --text:#eeeeee;
+  --body:#bcbcbc;
+  --muted:#acacac;
+  --faint:#969696;
+  --line:#363636;
+  --frame:#202020;
+  --frame-inner:#1b1b1b;
+  --hover:#2b2b2b;
+  --accent:#f2f2f2;
+  --minimal-card:#1c1c1c;
+  --minimal-border:#363636;
+}
+
+body {
+  background:var(--bg);
+  color:var(--text);
+  font:14px/1.5 "Segoe UI Variable Text","Segoe UI",Arial,sans-serif;
+  letter-spacing:0;
+}
+.container {width:min(100%,1290px);max-width:1290px;margin:auto;padding:0 28px;}
+.header {
+  min-height:68px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid var(--line);
+  gap:16px;
+}
+.header .brand {display:inline-flex;align-items:baseline;gap:14px;color:var(--text);font-weight:600;letter-spacing:0;}
+.brand-name {font-size:18px;font-weight:640;letter-spacing:-.035em;}
+.brand-caption {font-size:12px;font-weight:400;color:var(--muted);}
+.header-links {display:flex;align-items:center;gap:17px;}
+.header .github-link {color:var(--body);font-size:13px;}
+.header .github-link:hover {color:var(--text);}
+.header .command-trigger {
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:34px;padding:5px 10px;border:1px solid var(--line);
+  background:var(--frame);color:var(--body);border-radius:3px;
+  font-size:12px;font-weight:400;transition:background-color .14s,border-color .14s;
+}
+.header .command-trigger:hover {color:var(--text);border-color:var(--muted);background:var(--hover);}
+.header .command-trigger svg {width:15px;height:15px;display:block;}
+.header .command-trigger kbd {padding-left:7px;border-left:1px solid var(--line);color:var(--muted);font:10px/1.5 Consolas,monospace;}
+.header .theme-toggle {
+  display:grid;place-items:center;min-width:34px;width:34px;height:34px;
+  padding:7px;color:var(--body);background:var(--frame);
+  border:1px solid var(--line);border-radius:3px;
+}
+.header .theme-toggle:hover {background:var(--hover);color:var(--text);}
+.header .theme-toggle svg {width:17px;height:17px;}
+main {padding-top:0;}
+.directory {padding:0 0 66px;min-height:60vh;}
+.page-intro {display:flex;justify-content:space-between;align-items:baseline;gap:16px;padding:30px 0 20px;}
+.page-intro h1 {font-size:26px;font-weight:620;letter-spacing:-.035em;line-height:1.2;margin:0;color:var(--text);}
+.page-intro p {margin:0;color:var(--muted);font-size:12.5px;}
+.collection-navigation {
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  min-height:52px;border-bottom:1px solid var(--line);
+}
+.directory-tabs {display:flex;align-items:stretch;gap:26px;border:0;}
+.directory-tabs .tab {
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 1px 11px;margin:0 0 -1px;
+  color:var(--muted);background:transparent;border:0;
+  border-bottom:2px solid transparent;
+  font-size:13.5px;font-weight:550;letter-spacing:0;
+}
+.directory-tabs .tab.active {color:var(--text);border-bottom-color:var(--text);}
+.directory-tabs .tab:hover {color:var(--text);}
+.directory-tabs .tab span {color:var(--muted);font:11px/1.3 "Segoe UI",sans-serif;}
+.view-switch {display:inline-flex;gap:0;padding:2px;border:1px solid var(--line);border-radius:3px;background:var(--frame);}
+.view-switch .view-switch-button {
+  display:inline-flex;align-items:center;justify-content:center;
+  gap:5px;min-height:32px;padding:6px 10px;
+  background:none;border:none;border-radius:2px;
+  font-size:12px;color:var(--muted);font-weight:400;
+}
+.view-switch .view-switch-button.active {color:var(--text);background:var(--hover);}
+.view-switch .view-switch-button:hover {color:var(--text);}
+.view-switch .view-switch-button svg {width:13px;height:13px;}
+.toolbar {
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  min-height:67px;padding:12px 0 10px;margin:0;
+  border:none;border-radius:0;background:none;flex-wrap:nowrap;
+}
+.toolbar .search-field {
+  display:flex;align-items:center;gap:9px;flex:1 1 auto;
+  width:auto;max-width:none;min-width:110px;
+  height:40px;min-height:40px;padding:0 11px;
+  background:var(--frame);border:1px solid var(--line);border-radius:3px;box-shadow:none;
+}
+.toolbar .search-field:hover,.toolbar .search-field:focus-within {border-color:var(--muted);box-shadow:none;}
+.toolbar .search-field svg {width:16px;height:16px;color:var(--muted);flex:none;}
+.toolbar .search-field input {
+  flex:1 1 auto;width:100%;height:100%;min-width:0;min-height:0;
+  margin:0;padding:0;border:none;outline:none!important;
+  color:var(--text);background:transparent;font-size:12.5px;line-height:1.4;
+}
+.toolbar .search-field .search-clear {width:28px;height:28px;flex:0 0 28px;}
+.toolbar .search-field kbd {color:var(--muted);font:11px Consolas,monospace;border:0;border-left:1px solid var(--line);padding-left:8px;}
+.toolbar .selectors {display:flex;align-items:center;gap:9px;flex:none;}
+.toolbar .selector {min-width:0;}
+.toolbar .selector::after {right:13px;}
+.toolbar .selector select {
+  height:40px;min-height:40px;width:auto;max-width:184px;
+  padding:8px 29px 8px 11px;border:1px solid var(--line);
+  border-radius:3px;background:var(--frame);color:var(--body);
+  font-size:12px;font-weight:400;appearance:none;
+}
+.toolbar .selector select:hover {border-color:var(--muted);color:var(--text);}
+.section-meta {
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  min-height:27px;margin:0 0 14px;padding:0;border:0;
+  color:var(--muted);font-size:12px;
+}
+.section-meta-left {display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.section-meta #resultCount {color:var(--body);font:12px/1.4 "Segoe UI",sans-serif;}
+.section-meta #sectionNote {display:none;}
+.collection-count-label {display:none;}
+.reset-filters {padding:2px 0;border:0;border-bottom:1px solid var(--muted);border-radius:0;color:var(--body);background:none;font-size:11px;}
+.reset-filters:hover {color:var(--text);}
+
+/* Windhawk-like compact catalog: thumbnail beside a short description. */
+.sites-grid,.projects-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;grid-auto-rows:1fr;
+  gap:12px;row-gap:12px;padding:0;border:0;
+}
+.work-card.site-card,.work-card.project-row {
+  display:flex;flex-direction:row;align-items:stretch;
+  width:100%;height:100%;min-height:172px;min-width:0;
+  gap:0;margin:0;padding:12px;
+  background:var(--minimal-card);border:1px solid var(--minimal-border);
+  border-radius:3px;box-shadow:none;overflow:visible;transition:border-color .15s ease;
+}
+.work-card.site-card:hover,.work-card.project-row:hover,
+.work-card.site-card:focus-within,.work-card.project-row:focus-within {
+  transform:none;box-shadow:none;border-color:var(--muted);
+}
+.work-card .work-media {
+  display:block;position:relative;
+  width:161px;min-width:161px;max-width:161px;
+  height:124px;min-height:124px;max-height:124px;
+  flex:0 0 161px;align-self:flex-start;aspect-ratio:auto;
+  border:1px solid var(--line);border-radius:2px;
+  background:var(--frame-inner);box-shadow:none;overflow:visible;
+}
+.work-card.project-row .work-media {background:var(--frame-inner);}
+.work-card .work-media > .preview-button,
+.work-card .work-media > .project-preview {
+  display:block;position:absolute;inset:0;
+  width:100%;height:100%;margin:0;padding:0;
+  min-height:0;aspect-ratio:auto;
+  color:inherit;background:none;border:0;border-radius:2px;overflow:hidden;
+}
+.work-card .work-media .preview-window {
+  display:block;position:relative;width:100%;height:100%;
+  border:0;border-radius:2px;overflow:hidden;background:var(--frame-inner);
+}
+.work-card .work-media .preview-window img {
+  display:block;position:relative;z-index:2;
+  width:100%;height:100%;object-fit:cover;object-position:top center;
+  transform:none!important;filter:none!important;
+  transition:opacity .22s ease;
+}
+.work-card.project-row .preview-window img {
+  object-fit:contain;object-position:center;
+  padding:8px;
+}
+.work-card.site-card .preview-window img {object-fit:cover;object-position:center top;padding:0;}
+.work-card .preview-window img[data-sources] {opacity:0;}
+.work-card .preview-window img[data-sources].is-loaded {opacity:1;}
+.work-card .preview-window.has-image>.preview-placeholder {display:none;}
+.work-card .preview-placeholder {background:var(--frame-inner);gap:3px;padding:10px;}
+.work-card .preview-placeholder strong {font-size:13px;line-height:1.3;letter-spacing:-.025em;}
+.work-card .preview-placeholder span {font-size:9px;}
+.work-card .preview-button::after,.work-card .preview-button::before,
+.work-card .project-preview::after,.work-card .media-open {display:none!important;}
+.work-card .media-identity.media-favicon {
+  display:grid;place-items:center;position:absolute;z-index:5;
+  top:-10px;left:8px;right:auto;
+  width:25px;height:25px;min-width:25px;max-width:25px;
+  margin:0;padding:3px;border:1px solid var(--minimal-border);
+  border-radius:3px;background:var(--frame);
+  box-shadow:none;animation:none;transform:none!important;
+  pointer-events:none;
+}
+.work-card .media-favicon .site-favicon {
+  display:block;width:100%;height:100%;max-width:100%;min-width:0;
+  flex:none;margin:0;padding:0;object-fit:contain;
+  border:0;background:none;transform:none!important;
+}
+.work-card .work-content.site-details,
+.work-card .work-content.project-data {
+  display:flex;flex-direction:column;align-items:stretch;gap:0;
+  width:auto;min-width:0;flex:1 1 0;
+  height:auto;min-height:145px;max-height:none;
+  margin:0;padding:0 0 0 15px;
+  background:none;border:0;overflow:visible;
+}
+.work-card .work-eyebrow {
+  display:flex;align-items:center;
+  flex:0 0 18px;min-height:18px;height:18px;
+  margin:0;padding:0;
+  color:var(--muted);font-size:10px;font-weight:400;
+  letter-spacing:.02em;text-transform:none;
+}
+.work-card .work-eyebrow span:first-child {font-weight:400;color:var(--muted);}
+.work-card .work-title-row {
+  display:flex;align-items:flex-start;flex:0 0 auto;
+  min-height:0;height:auto;margin:4px 0 0;padding:0;
+}
+.work-card .work-title-row .work-name {
+  display:block;flex:none;width:100%;
+  height:auto;min-height:0;max-height:50px;
+  margin:0;padding:0;color:var(--text);
+  font-size:16px;font-weight:620;line-height:1.25;
+  letter-spacing:-.02em;overflow:hidden;
+}
+.work-card .work-name>span.site-title-button,
+.work-card .work-name>span.project-title {
+  display:-webkit-box;max-width:100%;overflow:hidden;
+  -webkit-box-orient:vertical;-webkit-line-clamp:2;
+  color:inherit;font:inherit;letter-spacing:inherit;
+  white-space:normal;cursor:default;
+}
+.work-card .work-description.site-description,
+.work-card .work-description.project-description {
+  display:-webkit-box;flex:0 0 auto;
+  width:auto;min-height:0;height:auto;max-height:38px;
+  margin:7px 0 0;padding:0;color:var(--body);
+  font:12px/1.5 "Segoe UI",Arial,sans-serif;
+  overflow:hidden;text-overflow:ellipsis;white-space:normal;
+  -webkit-box-orient:vertical;-webkit-line-clamp:2;
+}
+.work-card .work-actions {
+  display:flex;align-items:center;justify-content:flex-start;
+  flex:0 0 auto;flex-wrap:nowrap;
+  width:100%;height:33px;min-height:33px;max-height:33px;
+  margin-top:auto;padding:6px 0 0;gap:8px;
+  border:0;background:none;
+}
+.work-card .work-actions>.work-detail {
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+  flex:0 0 auto;min-width:58px;min-height:27px;height:27px;
+  margin:0;padding:4px 10px;color:var(--text);background:var(--frame);
+  border:1px solid var(--line);border-radius:2px;
+  font:11px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;
+}
+.work-card .work-actions>.work-detail:hover {border-color:var(--muted);background:var(--hover);text-decoration:none;color:var(--text);}
+.work-card .work-actions>.work-visit {
+  display:inline-flex;align-items:center;justify-content:center;gap:3px;
+  flex:0 0 auto;min-width:0;min-height:27px;height:27px;
+  padding:4px 6px;margin:0;color:var(--body);
+  background:none;border:0;border-radius:2px;
+  font:11px/1.2 "Segoe UI",Arial,sans-serif;text-decoration:none;white-space:nowrap;
+}
+.work-card .work-actions>.work-visit:hover {color:var(--text);text-decoration:underline;}
+.work-card .work-actions .work-source-row {
+  display:flex;align-items:center;justify-content:flex-end;
+  flex:0 0 auto;width:auto;min-width:0;
+  height:30px;min-height:30px;max-height:30px;
+  margin:0 0 0 auto;padding:0;border:0;
+}
+.work-card .work-actions .work-source-row .forge-strip {
+  display:flex;align-items:center;justify-content:flex-end;
+  width:auto;height:30px;min-height:30px;max-height:30px;
+  margin:0;padding:0;gap:0;border:0;
+}
+.work-card .work-source-row .forge-identity {display:none;}
+.work-card .work-source-row .forge-actions {gap:1px;}
+.work-card .work-source-row .forge-link,
+.work-card.project-row .work-source-row .forge-link {
+  display:grid;place-items:center;
+  width:30px;min-width:30px;height:30px;min-height:30px;
+  margin:0;padding:7px;border:1px solid transparent;
+  border-radius:2px;color:var(--body);background:none;
+}
+.work-card .work-source-row .forge-link:hover {color:var(--text);background:var(--hover);border-color:var(--line);}
+.work-card .work-source-row .forge-symbol,
+.work-card.project-row .work-source-row .forge-symbol {width:16px;height:16px;}
+.work-card .card-dates {display:none;}
+.work-card .work-sequence {display:none;}
+
+/* Keep the existing 3D view functional but use the same plain surfaces. */
+body.atlas-active .atlas-view {border:1px solid var(--line);border-radius:3px;box-shadow:none;}
+body.atlas-active .atlas-stage {
+  background:#1b1b1b;
+  background-image:none;
+}
+body.atlas-active .atlas-stage::after {border:0;}
+body.atlas-active .atlas-inspector {background:#202020;border-color:#363636;}
+body.atlas-active .atlas-inspector-category {color:#cbcbcb;}
+body.atlas-active .atlas-inspector-title-wrap h3 {font-size:26px;font-weight:610;}
+body.atlas-active .atlas-inspector-title-wrap p {color:#bcbcbc;}
+body.atlas-active .atlas-next-prev {border-color:#363636;}
+body.atlas-active .atlas-next-prev button {border-radius:3px;border:1px solid #404040;background:#282828;color:#dedede;}
+body.atlas-active .atlas-explore {border-radius:3px;background:#ededed;color:#171717;}
+body.atlas-active .atlas-visit {border-radius:3px;border-color:#515151;color:#ddd;}
+body.atlas-active .atlas-project-chooser select {border-radius:3px;background:#262626;border-color:#444;color:#dedede;}
+.atlas-progress>span {background:#e5e5e5;box-shadow:none;}
+.atlas-marker.is-active {border-color:#ededed;}
+
+/* Details belong to their own dialog; keep them easy to read. */
+.detail-dialog,.command-dialog {background:var(--bg);color:var(--text);border-color:var(--line);border-radius:4px;}
+.detail-top {background:var(--bg);}
+.detail-sidebar {background:var(--frame-inner);}
+.detail-links a {border-radius:3px;}
+.footer {
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  min-height:68px;margin:0;border-top:1px solid var(--line);
+  color:var(--muted);font-size:12px;
+}
+.footer a {color:var(--body);}
+.footer a:hover {color:var(--text);}
+.empty-state {background:var(--frame-inner);border:1px solid var(--line);border-radius:3px;padding:40px 20px;}
+@media(min-width:1550px) {
+  .container {max-width:1430px;}
+  .sites-grid,.projects-grid {grid-template-columns:repeat(3,minmax(0,1fr));}
+  .work-card .work-media {width:135px;min-width:135px;max-width:135px;flex-basis:135px;height:118px;min-height:118px;max-height:118px;}
+}
+@media(max-width:1120px) {
+  .container {padding-inline:22px;}
+  .work-card .work-media {width:132px;min-width:132px;max-width:132px;flex-basis:132px;height:118px;min-height:118px;max-height:118px;}
+  .work-card .work-content.site-details,.work-card .work-content.project-data {padding-left:12px;}
+  .work-card .work-title-row .work-name {font-size:15px;}
+  .work-card .work-actions {gap:4px;}
+  .work-card .work-actions>.work-visit {font-size:10px;padding-inline:3px;}
+  .work-card .work-source-row .forge-link,.work-card.project-row .work-source-row .forge-link {width:27px;min-width:27px;height:29px;min-height:29px;padding:6px;}
+}
+@media(max-width:820px) {
+  .container {padding-inline:20px;}
+  .sites-grid,.projects-grid {grid-template-columns:1fr;gap:11px;}
+  .work-card .work-media {width:165px;min-width:165px;max-width:165px;flex-basis:165px;height:122px;min-height:122px;max-height:122px;}
+  .work-card .work-title-row .work-name {font-size:16px;}
+}
+@media(max-width:600px) {
+  .container {padding-inline:16px;}
+  .header {min-height:61px;}
+  .brand-name {font-size:16px;}
+  .brand-caption {display:none;}
+  .header-links {gap:7px;}
+  .header .github-link {font-size:12px;}
+  .header .command-trigger {min-height:33px;min-width:33px;padding:7px;}
+  .header .command-trigger svg {display:block;width:16px;height:16px;}
+  .header .command-trigger span,.header .command-trigger kbd {display:none;}
+  .header .theme-toggle {min-width:33px;width:33px;height:33px;}
+  .page-intro {display:block;padding:23px 0 15px;}
+  .page-intro h1 {font-size:23px;}
+  .page-intro p {margin-top:4px;font-size:12px;}
+  .collection-navigation {min-height:47px;}
+  .directory-tabs {gap:17px;}
+  .directory-tabs .tab {font-size:12px;padding:8px 0 9px;gap:5px;}
+  .directory-tabs .tab span {font-size:10px;}
+  .view-switch .view-switch-button {font-size:10px;padding:5px 6px;min-height:30px;gap:4px;}
+  .view-switch .view-switch-button svg {display:none;}
+  .toolbar {flex-wrap:wrap;gap:7px;padding:9px 0 10px;}
+  .toolbar .search-field {flex:1 0 100%;height:37px;min-height:37px;}
+  .toolbar .selectors {width:100%;gap:7px;}
+  .toolbar .selector {flex:1 1 0;}
+  .toolbar .selector select {width:100%;max-width:none;height:37px;min-height:37px;font-size:11px;padding:6px 25px 6px 9px;}
+  .toolbar .selector::after {right:10px;}
+  .section-meta {min-height:22px;margin-bottom:10px;}
+  .work-card.site-card,.work-card.project-row {min-height:160px;padding:10px;}
+  .work-card .work-media {width:115px;min-width:115px;max-width:115px;flex-basis:115px;height:110px;min-height:110px;max-height:110px;}
+  .work-card .work-content.site-details,.work-card .work-content.project-data {padding-left:11px;min-height:137px;}
+  .work-card .work-title-row .work-name {font-size:14.5px;line-height:1.2;}
+  .work-card .work-description.site-description,.work-card .work-description.project-description {font-size:11.5px;max-height:34px;line-height:1.45;margin-top:5px;}
+  .work-card .work-eyebrow {font-size:10px;}
+  .work-card .work-actions>.work-detail {min-width:51px;min-height:27px;height:27px;padding:4px 7px;font-size:10px;}
+  .work-card .work-actions>.work-visit {font-size:0;gap:0;min-width:27px;height:27px;padding:0;display:grid;place-items:center;}
+  .work-card .work-actions>.work-visit span {font-size:16px;line-height:1;}
+  .work-card .work-actions>.work-source-row {margin-left:auto;}
+  .work-card .work-source-row .forge-link,.work-card.project-row .work-source-row .forge-link {width:27px;min-width:27px;height:27px;min-height:27px;padding:6px;}
+  body.atlas-active .atlas-inspector {border-left:0;border-top:1px solid #444;}
+}
+@media(max-width:365px) {
+  .container {padding-inline:12px;}
+  .work-card.site-card,.work-card.project-row {padding:9px;}
+  .work-card .work-media {width:100px;min-width:100px;max-width:100px;flex-basis:100px;height:104px;min-height:104px;max-height:104px;}
+  .work-card .work-content.site-details,.work-card .work-content.project-data {padding-left:9px;}
+  .work-card .work-title-row .work-name {font-size:13.5px;}
+  .work-card .work-source-row .forge-link,.work-card.project-row .work-source-row .forge-link {width:25px;min-width:25px;padding:5px;}
+  .work-card .work-actions>.work-detail {min-width:45px;padding:4px 6px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .work-card.site-card,.work-card.project-row,.work-card .preview-window img {transition:none!important;}
+  .work-card .media-identity.media-favicon {animation:none!important;}
+}
+
+
+/* Quiet edition: the identity comes from actual work and careful spacing. */
+:root {
+  --minimal-border: var(--line);
+}
+.header .brand { gap:0; }
+.header .brand-name {
+  font-size:17px;
+  font-weight:650;
+  letter-spacing:-.055em;
+}
+.header .command-trigger {
+  width:34px;
+  min-width:34px;
+  height:34px;
+  min-height:34px;
+  padding:7px;
+}
+.header .command-trigger svg { width:17px; height:17px; }
+.header .command-trigger .sr-only { position:absolute; }
+.header .command-trigger kbd {display:none;}
+.page-intro {
+  display:flex;
+  align-items:flex-end;
+  justify-content:flex-start;
+  padding:26px 0 16px;
+  min-height:99px;
+}
+.page-intro h1 {
+  margin:0;
+  color:var(--text);
+  font:650 clamp(38px,4.5vw,54px)/1.05 "Segoe UI Variable Display","Segoe UI",Arial,sans-serif;
+  letter-spacing:-.076em;
+}
+.page-intro h1 span {color:var(--muted);}
+.collection-navigation {min-height:52px;}
+.directory-tabs .tab {font-size:13px;font-weight:530;}
+.view-switch .view-switch-button {font-size:11px;}
+.view-switch .view-switch-button svg {width:14px;height:14px;}
+.toolbar {padding:12px 0 14px;min-height:64px;}
+.toolbar .search-field {max-width:600px;background:transparent;}
+.toolbar .search-field:focus-within {background:var(--frame-inner);}
+.toolbar .selector select {background:transparent;}
+.section-meta {
+  margin:0;
+  min-height:0;
+  height:0;
+  padding:0;
+  border:0;
+  overflow:visible;
+}
+.section-meta #resultCount,
+.section-meta #sectionNote {position:absolute;clip-path:inset(50%);width:1px;height:1px;overflow:hidden;white-space:nowrap;}
+.section-meta #resetFilters {display:none;}
+body.has-active-filters .section-meta {
+  display:flex;
+  min-height:34px;
+  height:34px;
+  margin:0 0 6px;
+}
+body.has-active-filters .section-meta #resultCount {
+  position:static;clip-path:none;width:auto;height:auto;
+  overflow:visible;white-space:normal;
+  color:var(--muted);
+  font-size:11px;
+}
+body.has-active-filters .section-meta #resetFilters:not([hidden]) {
+  display:inline-flex;
+  margin:0;
+  padding:2px 0;
+  font-size:11px;
+}
+body.has-active-filters .section-meta-left {gap:13px;}
+
+/* Unboxed visual index. Each item is one image, one title, one description. */
+.sites-grid,.projects-grid {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:stretch;
+  grid-auto-rows:1fr;
+  column-gap:clamp(20px,3.3vw,48px);
+  row-gap:0;
+  padding:0;
+  border:0;
+}
+.work-card.site-card,.work-card.project-row {
+  display:flex;
+  align-items:center;
+  flex-direction:row;
+  gap:18px;
+  min-width:0;
+  height:158px;
+  min-height:158px;
+  max-height:158px;
+  padding:17px 1px;
+  background:none;
+  border:0;
+  border-top:1px solid var(--line);
+  border-radius:0;
+  box-shadow:none;
+  transition:none;
+}
+.work-card.site-card:hover,
+.work-card.project-row:hover,
+.work-card.site-card:focus-within,
+.work-card.project-row:focus-within {
+  transform:none;
+  box-shadow:none;
+  border:0;
+  border-top:1px solid var(--muted);
+  background:none;
+}
+.work-card .work-media,
+.work-card.project-row .work-media {
+  display:block;
+  position:relative;
+  flex:0 0 clamp(150px,13vw,184px);
+  width:clamp(150px,13vw,184px);
+  min-width:0;
+  max-width:none;
+  height:114px;
+  min-height:114px;
+  max-height:114px;
+  padding:0;
+  overflow:visible;
+  align-self:center;
+  border:1px solid var(--line);
+  border-radius:2px;
+  background:var(--frame);
+  box-shadow:none;
+  transition:border-color .2s ease;
+}
+.work-card .work-media:hover {border-color:var(--muted);}
+.work-card .work-media > .preview-button,
+.work-card .work-media > .project-preview {
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%;
+  height:100%;
+  padding:0;
+  margin:0;
+  border:0;
+  border-radius:1px;
+  overflow:hidden;
+  background:var(--frame-inner);
+}
+.work-card .work-media .preview-window {
+  position:relative;
+  display:block;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  border:none;
+  border-radius:1px;
+  background:var(--frame-inner);
+}
+.work-card .work-media .preview-window img {
+  display:block;
+  width:100%;
+  height:100%;
+  position:relative;
+  z-index:2;
+  object-fit:cover;
+  object-position:top center;
+  transform:none!important;
+  filter:none!important;
+  transition:opacity .24s ease;
+}
+.work-card.project-row .preview-window img {object-fit:contain;object-position:center;padding:8px;}
+.work-card .preview-window img[data-sources] {opacity:0;}
+.work-card .preview-window img[data-sources].is-loaded {opacity:1;}
+.work-card .preview-window.has-image > .preview-placeholder {display:none;}
+.work-card .media-identity.media-favicon {
+  top:-9px;
+  left:9px;
+  width:25px;
+  min-width:25px;
+  max-width:25px;
+  height:25px;
+  padding:4px;
+  border:1px solid var(--line);
+  border-radius:3px;
+  background:var(--frame);
+  box-shadow:0 3px 8px rgba(0,0,0,.16);
+  animation:none;
+  transform:none!important;
+  pointer-events:none;
+}
+.work-card .media-favicon .site-favicon {
+  transform:none!important;
+  height:100%;
+  width:100%;
+  padding:0;
+  border:0;
+  object-fit:contain;
+}
+.work-card .work-content.site-details,
+.work-card .work-content.project-data {
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  flex:1 1 0;
+  width:auto;
+  min-width:0;
+  height:100%;
+  min-height:0;
+  max-height:none;
+  margin:0;
+  padding:5px 0 2px;
+  border:0;
+  overflow:visible;
+  background:transparent;
+  gap:0;
+}
+.work-card .work-name {
+  display:block;
+  flex:0 0 auto;
+  width:100%;
+  height:auto;
+  min-height:0;
+  max-height:50px;
+  padding:0;
+  margin:0;
+  overflow:hidden;
+  color:var(--text);
+  font:600 18px/1.25 "Segoe UI Variable Display","Segoe UI",sans-serif;
+  letter-spacing:-.032em;
+}
+.work-card .work-name > button.site-title-button,
+.work-card .work-name > button.project-title {
+  display:-webkit-box;
+  width:100%;
+  min-width:0;
+  max-width:100%;
+  padding:0;
+  background:none;
+  border:none;
+  color:inherit;
+  text-align:left;
+  font:inherit;
+  line-height:inherit;
+  letter-spacing:inherit;
+  white-space:normal;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  cursor:pointer;
+}
+.work-card .work-name > button:hover {color:var(--body);text-decoration:underline;text-underline-offset:3px;}
+.work-card .work-description.site-description,
+.work-card .work-description.project-description {
+  display:-webkit-box;
+  flex:0 0 auto;
+  height:auto;
+  min-height:0;
+  max-height:42px;
+  padding:0;
+  margin:7px 0 0;
+  color:var(--body);
+  font:400 12px/1.6 "Segoe UI Variable Text","Segoe UI",sans-serif;
+  white-space:normal;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+}
+.work-card .work-actions {
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  width:100%;
+  height:32px;
+  min-height:32px;
+  max-height:32px;
+  flex:0 0 32px;
+  padding:0;
+  margin-top:auto;
+  border:0;
+  gap:8px;
+}
+.work-card .work-actions>.work-visit {
+  display:inline-flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:5px;
+  flex:0 0 auto;
+  width:auto;
+  min-width:0;
+  height:30px;
+  min-height:30px;
+  max-height:30px;
+  padding:2px 0;
+  margin:0;
+  background:none;
+  border:none;
+  border-radius:0;
+  color:var(--muted);
+  font:500 12px/1.3 "Segoe UI",sans-serif;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.work-card .work-actions>.work-visit:hover {color:var(--text);text-decoration:underline;text-underline-offset:3px;}
+.work-card .work-actions>.work-visit span {font-size:14px;}
+.work-card .work-actions .work-source-row {
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  flex:0 0 auto;
+  width:auto;
+  height:34px;
+  min-height:34px;
+  max-height:34px;
+  margin:0;
+  padding:0;
+  border:0;
+}
+.work-card .work-actions .work-source-row .forge-strip {
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  width:auto;
+  height:34px;
+  min-height:34px;
+  max-height:34px;
+  padding:0;
+  margin:0;
+  border:0;
+  gap:0;
+}
+.work-card .work-source-row .forge-identity {display:none;}
+.work-card .work-source-row .forge-actions {gap:4px;}
+.work-card .work-source-row .forge-link,
+.work-card.project-row .work-source-row .forge-link {
+  display:grid;
+  place-items:center;
+  width:32px;
+  min-width:32px;
+  height:32px;
+  min-height:32px;
+  border:1px solid transparent;
+  border-radius:3px;
+  padding:7px;
+  color:var(--body);
+}
+.work-card .work-source-row .forge-link:hover {
+  border-color:var(--line);
+  background:var(--frame);
+  color:var(--text);
+}
+.work-card .work-source-row .forge-symbol {width:16px;height:16px;}
+.work-card .work-eyebrow,
+.work-card .work-sequence,
+.work-card .work-actions>.work-detail,
+.work-card .media-open,
+.work-card .card-dates {display:none!important;}
+
+/* Spatial view: no labels repeated on top of the actual pictures. */
+body.atlas-active .atlas-view {
+  border:1px solid var(--line);
+  border-radius:2px;
+  box-shadow:none;
+  background:#171717;
+  overflow:hidden;
+}
+body.atlas-active .atlas-stage {
+  background:#161616;
+  background-image:none;
+}
+body.atlas-active .atlas-stage::after {display:none;}
+body.atlas-active .atlas-scrim {opacity:.35;}
+body.atlas-active .atlas-scrim-left {background:linear-gradient(90deg,#161616,transparent);}
+body.atlas-active .atlas-scrim-right {background:linear-gradient(270deg,#161616,transparent);}
+body.atlas-active .atlas-labels {display:none;}
+body.atlas-active .atlas-inspector {
+  display:flex;
+  flex-direction:column;
+  background:#1c1c1c;
+  border-left:1px solid #353535;
+  padding:29px 29px 26px;
+}
+body.atlas-active .atlas-next-prev {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex:0 0 44px;
+  width:100%;
+  height:44px;
+  min-height:44px;
+  max-height:44px;
+  margin:0;
+  padding:0;
+  border:0;
+  background:none;
+}
+body.atlas-active .atlas-next-prev .atlas-counter {
+  color:#b7b7b7;
+  font:500 11px/1.3 Consolas,monospace;
+  letter-spacing:.03em;
+}
+body.atlas-active .atlas-next-prev button {
+  display:grid;
+  place-items:center;
+  width:42px;
+  min-width:42px;
+  height:42px;
+  min-height:42px;
+  padding:0;
+  background:none;
+  color:#dedede;
+  border:1px solid #434343;
+  border-radius:3px;
+  font-size:18px;
+  transform:none;
+}
+body.atlas-active .atlas-next-prev button:not(:disabled):hover {
+  background:#303030;
+  border-color:#777;
+  color:#fff;
+  transform:none;
+}
+body.atlas-active .atlas-inspector-title-wrap {
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:center;
+  gap:0;
+  flex:1 1 auto!important;
+  width:100%;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0;
+  padding:22px 0 28px;
+}
+body.atlas-active .atlas-title-identity {
+  display:flex;
+  align-items:center;
+  width:100%;
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0;
+}
+body.atlas-active .atlas-inspector-title-wrap h3 {
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:0;
+  max-height:none;
+  flex:0 1 auto;
+  font:600 clamp(27px,2.6vw,38px)/1.13 "Segoe UI Variable Display","Segoe UI",sans-serif;
+  letter-spacing:-.052em;
+  color:#f0f0f0;
+}
+body.atlas-active .atlas-inspector-title-wrap p {
+  flex:0 0 auto;
+  margin:13px 0 0;
+  color:#bdbdbd;
+  font-size:13px;
+  line-height:1.65;
+}
+body.atlas-active .atlas-inspector-actions {
+  display:flex;
+  flex:0 0 auto;
+  align-items:center;
+  gap:9px;
+  padding:0;
+  margin:0;
+  flex-wrap:nowrap;
+}
+body.atlas-active .atlas-inspector-actions > * {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:1 1 0;
+  min-width:0;
+  min-height:39px;
+  padding:9px 10px;
+  border-radius:3px;
+  font:550 12px/1.4 "Segoe UI",sans-serif;
+  text-decoration:none;
+  transform:none;
+}
+body.atlas-active .atlas-inspector-actions > *:hover {transform:none;}
+body.atlas-active .atlas-explore {
+  background:#eaeaea;
+  border-color:#eaeaea;
+  color:#171717;
+}
+body.atlas-active .atlas-visit {
+  background:none;
+  border:1px solid #555;
+  color:#e1e1e1;
+}
+body.atlas-active .atlas-visit:hover {border-color:#aaa;background:#292929;}
+body.atlas-active .atlas-project-chooser {
+  display:block;
+  flex:0 0 auto;
+  width:100%;
+  margin:20px 0 0;
+  padding:15px 0 0;
+  border-top:1px solid #393939;
+}
+body.atlas-active .atlas-project-chooser select {
+  display:block;
+  width:100%;
+  min-height:40px;
+  padding:8px 12px;
+  background:#242424;
+  border:1px solid #424242;
+  border-radius:3px;
+  color:#d4d4d4;
+  font-size:12px;
+  cursor:pointer;
+}
+body.atlas-active .atlas-project-chooser select:hover {border-color:#777;}
+body.atlas-active .atlas-identity-forges,
+body.atlas-active .atlas-source-links,
+body.atlas-active .atlas-pagination,
+body.atlas-active .atlas-progress,
+body.atlas-active .atlas-stage-header,
+body.atlas-active .atlas-stage-footer {display:none!important;}
+body.atlas-active .atlas-loading {font-size:0;}
+body.atlas-active .atlas-loading-rule {width:30px;}
+
+/* In the detail view, descriptions and dates are available without duplication. */
+.footer {justify-content:flex-start;min-height:65px;}
+@media(min-width:1550px) {
+  .sites-grid,.projects-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:1090px) {
+  .work-card.site-card,.work-card.project-row {gap:13px;height:152px;min-height:152px;max-height:152px;padding-block:15px;}
+  .work-card .work-media,.work-card.project-row .work-media {width:143px;flex-basis:143px;height:112px;min-height:112px;max-height:112px;}
+  .work-card .work-name {font-size:16px;}
+  body.atlas-active .atlas-inspector {padding:22px;}
+}
+@media(max-width:820px) {
+  .sites-grid,.projects-grid {grid-template-columns:minmax(0,1fr);row-gap:0;}
+  .work-card.site-card,.work-card.project-row {
+    min-height:151px;
+    height:151px;
+    max-height:151px;
+    gap:17px;
+    padding:16px 1px;
+  }
+  .work-card .work-media,.work-card.project-row .work-media {
+    width:174px;flex-basis:174px;height:112px;min-height:112px;max-height:112px;
+  }
+  .work-card .work-name {font-size:18px;}
+}
+@media(max-width:700px) {
+  body.atlas-active .atlas-inspector {
+    border-left:0;
+    border-top:1px solid #383838;
+    padding:20px 21px;
+  }
+  body.atlas-active .atlas-inspector-title-wrap {
+    padding:18px 0;
+  }
+  body.atlas-active .atlas-inspector-title-wrap h3 {font-size:27px;}
+  body.atlas-active .atlas-next-prev {height:40px;min-height:40px;max-height:40px;flex-basis:40px;}
+  body.atlas-active .atlas-next-prev button {height:39px;min-height:39px;width:39px;min-width:39px;}
+  body.atlas-active .atlas-project-chooser {margin-top:14px;padding-top:13px;}
+}
+@media(max-width:600px) {
+  .header .command-trigger {min-height:33px;width:33px;min-width:33px;height:33px;}
+  .page-intro {min-height:81px;padding:18px 0 13px;}
+  .page-intro h1 {font-size:41px;}
+  .section-meta {margin:0;}
+  .work-card.site-card,.work-card.project-row {min-height:141px;height:141px;max-height:141px;gap:12px;padding:12px 1px;}
+  .work-card .work-media,.work-card.project-row .work-media {width:120px;flex-basis:120px;height:103px;min-height:103px;max-height:103px;}
+  .work-card .work-content.site-details,.work-card .work-content.project-data {padding:2px 0 1px;}
+  .work-card .work-name {font-size:16px;line-height:1.24;}
+  .work-card .work-description.site-description,.work-card .work-description.project-description {font-size:11.5px;line-height:1.5;margin-top:5px;max-height:36px;}
+  .work-card .work-actions {height:30px;min-height:30px;max-height:30px;flex-basis:30px;}
+  .work-card .work-actions>.work-visit {font-size:12px;height:30px;min-height:30px;}
+  .work-card .work-source-row .forge-link,.work-card.project-row .work-source-row .forge-link {width:29px;min-width:29px;height:29px;min-height:29px;padding:6px;}
+}
+@media(max-width:365px) {
+  .work-card.site-card,.work-card.project-row {gap:10px;}
+  .work-card .work-media,.work-card.project-row .work-media {width:100px;flex-basis:100px;height:98px;min-height:98px;max-height:98px;}
+  .work-card .work-name {font-size:15px;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .work-card .work-media,.work-card .work-media img {transition:none!important;}
+}
+
+
+/* Mobile 3D: show the selected project without a long empty inspector. */
+@media(max-width:700px) {
+  body.atlas-active .atlas-view {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:285px 350px;
+    height:auto;
+    min-height:0;
+    max-height:none;
+  }
+  body.atlas-active .atlas-stage {
+    height:285px;
+    min-height:285px;
+    max-height:285px;
+  }
+  body.atlas-active .atlas-inspector {
+    height:350px;
+    min-height:350px;
+    max-height:350px;
+    padding:17px 20px 18px;
+  }
+  body.atlas-active .atlas-inspector-title-wrap {
+    flex:0 0 auto!important;
+    justify-content:flex-start;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    margin:0;
+    padding:19px 0 20px;
+  }
+  body.atlas-active .atlas-inspector-title-wrap h3 {
+    font-size:27px;
+    max-height:2.25em;
+  }
+  body.atlas-active .atlas-inspector-title-wrap p {
+    margin-top:9px;
+    line-height:1.5;
+    font-size:12px;
+  }
+  body.atlas-active .atlas-inspector-actions {
+    margin:0;
+    padding:0;
+    min-height:39px;
+  }
+  body.atlas-active .atlas-project-chooser {
+    margin-top:auto;
+    padding-top:11px;
+  }
+}
+@media(max-width:420px) {
+  body.atlas-active .atlas-view {
+    grid-template-rows:270px 355px;
+  }
+  body.atlas-active .atlas-stage {
+    height:270px;
+    min-height:270px;
+    max-height:270px;
+  }
+  body.atlas-active .atlas-inspector {
+    height:355px;
+    min-height:355px;
+    max-height:355px;
+  }
+}
+@media(max-width:350px) {
+  body.atlas-active .atlas-view {
+    grid-template-rows:250px 375px;
+  }
+  body.atlas-active .atlas-stage {
+    height:250px;
+    min-height:250px;
+    max-height:250px;
+  }
+  body.atlas-active .atlas-inspector {
+    height:375px;
+    min-height:375px;
+    max-height:375px;
+    padding-inline:15px;
+  }
+}
+
+
+/* Index: identity beside a title, release metadata without extra badges. */
+.work-card.site-card .work-name > button.site-title-button {
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:9px;
+  width:100%;
+  text-decoration:none;
+}
+.work-card .title-favicon {
+  display:block;
+  width:21px;
+  min-width:21px;
+  max-width:21px;
+  height:21px;
+  min-height:21px;
+  max-height:21px;
+  object-fit:contain;
+  border-radius:3px;
+  background:transparent;
+  transform:none!important;
+}
+.work-card .work-title-text {
+  display:-webkit-box;
+  flex:1 1 0;
+  min-width:0;
+  max-width:100%;
+  overflow:hidden;
+  white-space:normal;
+  text-overflow:ellipsis;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2;
+}
+.work-card.project-row {
+  height:181px;
+  min-height:181px;
+  max-height:181px;
+}
+.work-card.project-row .work-content.project-data {
+  padding-block:3px;
+}
+.work-card .project-meta {
+  display:flex;
+  align-items:center;
+  flex:0 0 auto;
+  flex-wrap:wrap;
+  gap:4px 9px;
+  min-width:0;
+  max-width:100%;
+  min-height:18px;
+  margin-top:8px;
+  color:var(--muted);
+  font:400 11.5px/1.35 "Segoe UI Variable Text","Segoe UI",Arial,sans-serif;
+}
+.work-card .project-release {
+  min-width:0;
+  max-width:100%;
+  font-weight:580;
+  color:var(--body);
+  text-overflow:ellipsis;
+  overflow:hidden;
+  white-space:nowrap;
+}
+.work-card .project-meta-dot {color:var(--faint);}
+.work-card .project-updated {
+  white-space:nowrap;
+  color:var(--muted);
+}
+body.atlas-active .atlas-title-identity {gap:12px;}
+body.atlas-active .atlas-title-identity img#atlasFavicon:not([hidden]) {
+  display:block;
+  flex:0 0 34px;
+  width:34px;
+  min-width:34px;
+  height:34px;
+  min-height:34px;
+  margin:0;
+  padding:3px;
+  object-fit:contain;
+  background:#292929;
+  border:1px solid #3f3f3f;
+  border-radius:5px;
+}
+body.atlas-active .atlas-title-identity h3 {
+  flex:1 1 auto;
+  min-width:0;
+  width:auto;
+}
+.detail-sidebar .detail-meta dd#detailRelease {
+  overflow-wrap:anywhere;
+}
+@media(max-width:1090px) {
+  .work-card.project-row {height:181px;min-height:181px;max-height:181px;}
+  .work-card .project-meta {font-size:11px;gap:4px 7px;}
+}
+@media(max-width:820px) {
+  .work-card.project-row {height:175px;min-height:175px;max-height:175px;}
+}
+@media(max-width:600px) {
+  .work-card.project-row {height:177px;min-height:177px;max-height:177px;}
+  .work-card .title-favicon {width:19px;min-width:19px;max-width:19px;height:19px;min-height:19px;max-height:19px;}
+  .work-card.site-card .work-name > button.site-title-button {gap:7px;}
+  .work-card .project-meta {margin-top:6px;font-size:10.5px;gap:3px 6px;}
+  .work-card .project-release {max-width:115px;}
+  body.atlas-active .atlas-title-identity img#atlasFavicon:not([hidden]) {
+    width:28px;min-width:28px;height:28px;min-height:28px;flex-basis:28px;padding:2px;
+  }
+  body.atlas-active .atlas-title-identity {gap:9px;}
+}
+@media(max-width:365px) {
+  .work-card.project-row {height:187px;min-height:187px;max-height:187px;}
+  .work-card .project-meta-dot {display:none;}
+  .work-card .project-updated {white-space:normal;}
+}
+
+
+
+/* Dark-only index. The 3D experience is a distinct, framed object,
+   not a full-page surface. Leave intentional space beneath it. */
+:root { color-scheme:dark; }
+.page-intro {
+  min-height:68px;
+  padding:15px 0 10px;
+}
+.page-intro h1 {
+  font-size:clamp(28px,3.5vw,39px);
+  line-height:1.08;
+  letter-spacing:-.068em;
+}
+body.atlas-active main {padding-top:0;}
+body.atlas-active .directory {
+  padding-bottom:0;
+  min-height:0;
+}
+body.atlas-active .atlas-view {
+  display:grid;
+  height:min(540px,calc(100dvh - 300px));
+  min-height:350px;
+  max-height:540px;
+  margin:0;
+  grid-template-rows:minmax(0,1fr);
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:3px;
+}
+body.atlas-active .atlas-stage {
+  min-height:0;
+  height:100%;
+  max-height:100%;
+  overflow:hidden;
+}
+body.atlas-active .atlas-inspector {
+  min-height:0;
+  height:100%;
+  max-height:100%;
+  padding:clamp(14px,2vw,27px);
+  overflow:hidden;
+}
+body.atlas-active .atlas-inspector-title-wrap {
+  min-height:0!important;
+  flex:1 1 auto!important;
+  overflow:hidden;
+}
+body.atlas-active .atlas-inspector-title-wrap p {
+  display:-webkit-box;
+  max-height:6.6em;
+  overflow:hidden;
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:4;
+}
+body.atlas-active .atlas-project-chooser {margin-top:12px;}
+body.atlas-active .footer {display:none;}
+
+@media(max-height:700px) and (min-width:701px) {
+  body.atlas-active .atlas-inspector {padding:12px 17px;}
+  body.atlas-active .atlas-inspector-title-wrap {padding:8px 0;}
+  body.atlas-active .atlas-inspector-title-wrap h3 {font-size:25px;}
+  body.atlas-active .atlas-inspector-title-wrap p {-webkit-line-clamp:2;font-size:12px;}
+  body.atlas-active .atlas-project-chooser {margin-top:7px;padding-top:7px;}
+}
+@media(max-width:700px) {
+  .page-intro {min-height:57px;padding:10px 0 8px;}
+  .page-intro h1 {font-size:31px;}
+  body.atlas-active .page-intro {min-height:53px;padding:9px 0 7px;}
+  body.atlas-active .page-intro h1 {font-size:29px;}
+  body.atlas-active .collection-navigation {min-height:43px;height:43px;}
+  body.atlas-active .toolbar {
+    min-height:99px;
+    gap:6px;
+    padding:7px 0 8px;
+    margin:0;
+  }
+  body.atlas-active .toolbar .search-field {height:36px;min-height:36px;}
+  body.atlas-active .toolbar .selector select {height:36px;min-height:36px;}
+  body.atlas-active .atlas-view {
+    height:min(540px,calc(100dvh - 305px));
+    min-height:345px;
+    max-height:540px;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:minmax(0,.4fr) minmax(0,.6fr);
+  }
+  body.atlas-active .atlas-inspector {
+    display:flex;
+    flex-direction:column;
+    padding:9px 15px 12px;
+  }
+  body.atlas-active .atlas-next-prev {
+    flex:0 0 34px;
+    min-height:34px;
+    height:34px;
+    max-height:34px;
+  }
+  body.atlas-active .atlas-next-prev button {
+    width:34px;min-width:34px;height:34px;min-height:34px;
+  }
+  body.atlas-active .atlas-inspector-title-wrap {
+    display:flex;
+    flex:1 1 auto!important;
+    justify-content:center;
+    min-height:0!important;
+    height:auto!important;
+    max-height:none!important;
+    padding:5px 0 6px;
+  }
+  body.atlas-active .atlas-inspector-title-wrap h3 {
+    font-size:clamp(20px,5.4vw,25px);
+    line-height:1.1;
+    max-height:2.2em;
+  }
+  body.atlas-active .atlas-inspector-title-wrap p {
+    margin-top:7px;
+    font-size:11.5px;
+    line-height:1.35;
+    -webkit-line-clamp:2;
+    max-height:2.8em;
+  }
+  body.atlas-active .atlas-inspector-actions {
+    flex:0 0 36px;min-height:36px;margin:0;
+  }
+  body.atlas-active .atlas-inspector-actions > * {
+    min-height:36px;height:36px;padding:6px 9px;
+  }
+  body.atlas-active .atlas-project-chooser {
+    flex:0 0 38px;
+    height:38px;
+    min-height:38px;
+    max-height:38px;
+    margin:4px 0 0;
+    padding:0;
+    border:0;
+  }
+  body.atlas-active .atlas-project-chooser select {height:38px;min-height:38px;}
+}
+@media(max-width:420px) {
+  body.atlas-active .atlas-view {
+    grid-template-rows:minmax(0,.38fr) minmax(0,.62fr);
+  }
+}
+@media(max-width:350px) {
+  body.atlas-active .atlas-inspector {padding:6px 10px 8px;}
+  body.atlas-active .atlas-inspector-title-wrap h3 {font-size:19px;}
+}
+
+
+/* Three.js studio carousel, 2026. No labels or ornamental UI:
+   illumination and depth belong to the WebGL scene itself. */
+body.atlas-active .atlas-stage {
+  isolation:isolate;
+  background-color:#101113;
+  background-image:
+    radial-gradient(ellipse 86% 75% at 50% 43%,
+      rgba(47,51,56,.87) 0%,
+      rgba(26,28,32,.94) 42%,
+      #101114 80%,
+      #0c0d0e 100%);
+}
+body.atlas-active .atlas-stage::before {
+  content:"";
+  display:block;
+  position:absolute;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 39% 12% at 50% 78%,
+      rgba(137,145,157,.10),transparent 75%),
+    linear-gradient(180deg,rgba(255,255,255,.022),transparent 19%,
+      transparent 84%,rgba(0,0,0,.22));
+}
+body.atlas-active .atlas-stage::after {display:none;}
+body.atlas-active .atlas-canvas {z-index:1;}
+body.atlas-active .atlas-scrim {
+  z-index:2;
+  width:13%;
+  opacity:.30;
+  pointer-events:none;
+}
+body.atlas-active .atlas-scrim-left {
+  background:linear-gradient(90deg,#101113 0%,rgba(16,17,19,.42) 44%,transparent 100%);
+}
+body.atlas-active .atlas-scrim-right {
+  background:linear-gradient(270deg,#101113 0%,rgba(16,17,19,.42) 44%,transparent 100%);
+}
+body.atlas-active .atlas-webgl {
+  outline-offset:-3px;
+  cursor:grab;
+  touch-action:none;
+}
+body.atlas-active .atlas-webgl:active {cursor:grabbing;}
+body.atlas-active .atlas-webgl:focus-visible {
+  outline:1px solid rgba(217,223,227,.40);
+}
+@media(max-width:700px) {
+  body.atlas-active .atlas-scrim {width:8%;opacity:.21;}
+  body.atlas-active .atlas-stage {
+    background-image:
+      radial-gradient(ellipse 86% 86% at 50% 46%,
+        #292b2e 0%,#17191c 43%,#0e0f12 100%);
+  }
+}
+@media(prefers-reduced-motion:reduce) {
+  body.atlas-active .atlas-webgl {scroll-behavior:auto;}
+}
+
+
+/* Full 3D descriptions. Never silently clamp project information. */
+body.atlas-active .atlas-inspector .atlas-inspector-title-wrap {
+  display:flex;
+  flex-direction:column;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  overflow:hidden;
+}
+body.atlas-active .atlas-inspector .atlas-inspector-title-wrap #atlasDescription {
+  display:block!important;
+  flex:0 1 auto!important;
+  width:100%;
+  min-height:0!important;
+  height:auto!important;
+  max-height:none!important;
+  margin:11px 0 0;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
+  -webkit-line-clamp:unset!important;
+  -webkit-box-orient:initial;
+  scrollbar-color:#646464 transparent;
+  scrollbar-width:thin;
+  overflow-wrap:break-word;
+  font-size:12.5px;
+  line-height:1.52;
+}
+body.atlas-active .atlas-inspector #atlasDescription:focus-visible {
+  outline:1px solid #777;
+  outline-offset:3px;
+}
+body.atlas-active .atlas-inspector #atlasDescription::-webkit-scrollbar {width:4px;}
+body.atlas-active .atlas-inspector #atlasDescription::-webkit-scrollbar-thumb {
+  background:#646464;
+  border-radius:4px;
+}
+
+/* Project indicators stay outside directoryPanel, but their center tracks the
+   left-hand 3D canvas, never the entire canvas + inspector combined.
+   The scene width is measured by ResizeObserver, so it works at all sizes. */
+#atlasPagination[hidden],
+body:not(.atlas-active) #atlasPagination {display:none!important;}
+body.atlas-active .directory > #atlasPagination:not([hidden]) {
+  position:relative;
+  inset:auto;
+  left:var(--atlas-pagination-center,50%);
+  display:grid!important;
+  grid-template-columns:repeat(var(--pagination-count,7),minmax(0,1fr));
+  align-items:center;
+  justify-items:stretch;
+  width:min(100%,calc(var(--pagination-count,7) * 24px));
+  max-width:100%;
+  height:32px;
+  min-height:32px;
+  margin:6px 0 0;
+  padding:0;
+  gap:0;
+  border:0;
+  background:none;
+  transform:translateX(-50%);
+  opacity:1;
+}
+body.atlas-active .directory > #atlasPagination .atlas-marker {
+  display:grid;
+  place-items:center;
+  width:100%;
+  min-width:0;
+  height:30px;
+  min-height:30px;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  box-shadow:none;
+  transform:none;
+  cursor:pointer;
+  transition:none;
+}
+body.atlas-active .directory > #atlasPagination span.atlas-marker {
+  cursor:default;
+}
+body.atlas-active .directory > #atlasPagination .atlas-marker::before {
+  content:"";
+  display:block;
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#656565;
+  transition:width .22s ease,height .22s ease,background-color .22s ease;
+}
+body.atlas-active .directory > #atlasPagination .atlas-marker.is-active::before {
+  width:8px;
+  height:8px;
+  background:#eaeaea;
+}
+body.atlas-active .directory > #atlasPagination .atlas-marker:not(.is-active):hover::before {
+  background:#b2b2b2;
+}
+body.atlas-active .directory > #atlasPagination .atlas-marker:focus-visible {
+  outline:1px solid #d2d2d2;
+  outline-offset:0;
+}
+@media (prefers-reduced-motion:reduce) {
+  body.atlas-active .directory > #atlasPagination .atlas-marker::before {
+    transition:none;
+  }
+}
+@media (max-height:750px) and (min-width:701px) {
+  body.atlas-active .atlas-view {
+    height:min(510px,calc(100dvh - 337px));
+    min-height:325px;
+  }
+}
+@media (max-width:700px) {
+  body.atlas-active .atlas-view {
+    height:min(516px,calc(100dvh - 343px));
+    min-height:305px;
+  }
+  body.atlas-active .directory > #atlasPagination:not([hidden]) {
+    height:30px;
+    min-height:30px;
+    margin-top:4px;
+  }
+  body.atlas-active .atlas-inspector .atlas-inspector-title-wrap #atlasDescription {
+    margin-top:7px;
+    font-size:11.5px;
+    line-height:1.42;
+  }
+}
+
+
+/* Compact header contact links. Text on desktop, accessible icons on mobile. */
+.header .header-links {gap:14px;flex:none;}
+.header .social-link {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:none;
+  min-height:34px;
+  padding:4px 0;
+  border:0;
+  border-radius:3px;
+  background:transparent;
+  color:var(--body);
+  font:500 12.5px/1.4 "Segoe UI Variable Text","Segoe UI",Arial,sans-serif;
+  text-decoration:none;
+  white-space:nowrap;
+  cursor:pointer;
+  transition:color .16s ease;
+}
+.header .social-link:hover {color:var(--text);}
+.header .social-link:focus-visible {outline:2px solid var(--text);outline-offset:3px;}
+.header .social-link svg {
+  display:none;
+  width:19px;
+  height:19px;
+  flex:none;
+}
+.header .email-action {position:relative;display:inline-flex;align-items:center;}
+.header .email-copy-status {
+  position:absolute;
+  z-index:15;
+  top:calc(100% + 7px);
+  right:-7px;
+  width:max-content;
+  max-width:min(240px,75vw);
+  padding:6px 10px;
+  color:#ececec;
+  background:#282828;
+  border:1px solid var(--line);
+  border-radius:4px;
+  font-size:11px;
+  pointer-events:none;
+  opacity:0;
+  transform:translateY(-3px);
+  transition:opacity .15s ease,transform .15s ease;
+}
+.header .email-copy-status.is-visible {opacity:1;transform:translateY(0);}
+.header .email-copy-status:empty {display:none;}
+@media(max-width:600px) {
+  .header .header-links {gap:5px;}
+  .header .social-link {width:33px;min-width:33px;height:33px;min-height:33px;padding:7px;}
+  .header .social-link svg {display:block;}
+  .header .social-link .social-text {display:none;}
+}
+@media(prefers-reduced-motion:reduce) {
+  .header .social-link,.header .email-copy-status {transition:none;}
+}
+
+
+/* Expanded visual scale, Nov 2026: use the display instead of leaving wide
+   unused side gutters. Keep the original two-column grid and 3D composition. */
+.container {
+  width:min(100%,1680px);
+  max-width:1680px;
+  padding-inline:clamp(18px,2.5vw,44px);
+}
+body {font-size:15px;}
+.header {min-height:76px;}
+.header .brand-name {font-size:20px;}
+.header .social-link {font-size:14px;}
+.header .command-trigger {width:39px;min-width:39px;height:39px;min-height:39px;}
+.header .command-trigger svg {width:18px;height:18px;}
+.page-intro {min-height:80px;padding:18px 0 13px;}
+.page-intro h1 {font-size:clamp(39px,3.2vw,49px);line-height:1.06;}
+.collection-navigation {min-height:58px;}
+.directory-tabs .tab {font-size:15px;gap:9px;padding-block:12px;}
+.directory-tabs .tab span {font-size:12px;}
+.view-switch .view-switch-button {min-height:36px;font-size:13px;padding:7px 13px;}
+.view-switch .view-switch-button svg {width:16px;height:16px;}
+.toolbar {min-height:75px;padding:13px 0 12px;gap:14px;}
+.toolbar .search-field {height:46px;min-height:46px;padding-inline:14px;max-width:740px;}
+.toolbar .search-field input {font-size:14px;}
+.toolbar .selector select {height:46px;min-height:46px;max-width:218px;font-size:13px;padding-inline:13px 32px;}
+.sites-grid,.projects-grid {column-gap:clamp(24px,3vw,58px);row-gap:0;}
+.work-card.site-card,.work-card.project-row {
+  height:212px;min-height:212px;max-height:212px;
+  gap:20px;padding-block:22px;
+}
+.work-card .work-media,.work-card.project-row .work-media {
+  flex:0 0 clamp(190px,16.2vw,265px);
+  width:clamp(190px,16.2vw,265px);
+  height:156px;min-height:156px;max-height:156px;
+}
+.work-card .work-content.site-details,.work-card .work-content.project-data {
+  padding-top:7px;padding-bottom:3px;
+}
+.work-card .work-name {font-size:clamp(18px,1.4vw,22px);line-height:1.23;max-height:56px;}
+.work-card .work-description.site-description,
+.work-card .work-description.project-description {
+  font-size:14px;line-height:1.5;max-height:45px;margin-top:9px;
+}
+.work-card .work-actions>.work-visit {font-size:13px;}
+.work-card .project-meta {font-size:12px;gap:5px 9px;}
+.work-card .work-source-row .forge-link,
+.work-card.project-row .work-source-row .forge-link {
+  width:36px;min-width:36px;height:36px;min-height:36px;
+}
+body.atlas-active .atlas-view {
+  height:clamp(560px,calc(100dvh - 240px),720px);
+  min-height:560px;
+  max-height:720px;
+}
+body.atlas-active .atlas-inspector {padding:clamp(18px,2.3vw,34px);}
+body.atlas-active .atlas-inspector-title-wrap h3 {
+  font-size:clamp(30px,2.8vw,43px);
+}
+body.atlas-active .atlas-inspector-title-wrap p {font-size:14px;}
+body.atlas-active .atlas-inspector-actions > * {min-height:43px;font-size:13px;}
+body.atlas-active .atlas-project-chooser select {min-height:44px;font-size:13px;}
+@media(min-width:821px) and (max-width:1100px) {
+  .work-card.site-card,.work-card.project-row {
+    height:198px;min-height:198px;max-height:198px;
+    gap:15px;padding-block:18px;
+  }
+  .work-card .work-media,.work-card.project-row .work-media {
+    flex-basis:clamp(175px,19vw,210px);
+    width:clamp(175px,19vw,210px);
+    height:143px;min-height:143px;max-height:143px;
+  }
+  .work-card .work-name {font-size:18px;}
+  .work-card .work-description.site-description,
+  .work-card .work-description.project-description {font-size:12.5px;}
+}
+@media(max-width:820px) {
+  .container {padding-inline:20px;}
+  .sites-grid,.projects-grid {grid-template-columns:minmax(0,1fr);}
+  .work-card.site-card,.work-card.project-row {
+    height:205px;min-height:205px;max-height:205px;
+    gap:19px;padding-block:20px;
+  }
+  .work-card .work-media,.work-card.project-row .work-media {
+    flex-basis:220px;width:220px;
+    height:151px;min-height:151px;max-height:151px;
+  }
+  .work-card .work-name {font-size:20px;}
+  body.atlas-active .atlas-view {
+    height:clamp(540px,calc(100dvh - 260px),650px);
+    min-height:540px;max-height:650px;
+  }
+}
+@media(max-width:700px) {
+  .header {min-height:67px;}
+  .header .brand-name {font-size:18px;}
+  .header .social-link {width:33px;min-width:33px;height:33px;min-height:33px;}
+  .header .command-trigger {width:35px;min-width:35px;height:35px;min-height:35px;}
+  .page-intro {min-height:67px;padding:13px 0 12px;}
+  .page-intro h1 {font-size:36px;}
+  body.atlas-active .page-intro {min-height:57px;padding:12px 0 10px;}
+  body.atlas-active .page-intro h1 {font-size:34px;}
+  .collection-navigation {min-height:49px;}
+  .directory-tabs .tab {font-size:13px;}
+  .toolbar {min-height:0;padding:11px 0 14px;gap:9px;}
+  .toolbar .search-field {height:43px;min-height:43px;max-width:none;}
+  .toolbar .search-field input {font-size:13.5px;}
+  .toolbar .selector select {height:41px;min-height:41px;font-size:12px;max-width:none;}
+  body.atlas-active .toolbar {min-height:104px;padding:8px 0 9px;}
+  body.atlas-active .toolbar .search-field {height:40px;min-height:40px;}
+  body.atlas-active .toolbar .selector select {height:40px;min-height:40px;}
+  body.atlas-active .atlas-view {
+    height:clamp(490px,calc(100dvh - 270px),600px);
+    min-height:490px;max-height:600px;
+    grid-template-columns:minmax(0,1fr);
+    grid-template-rows:minmax(0,.43fr) minmax(0,.57fr);
+  }
+  body.atlas-active .atlas-inspector {padding:10px 16px 14px;}
+  body.atlas-active .atlas-inspector-title-wrap h3 {
+    font-size:clamp(21px,5.6vw,27px);
+  }
+  body.atlas-active .atlas-inspector-title-wrap p {font-size:12px;}
+}
+@media(max-width:600px) {
+  .container {padding-inline:16px;}
+  .work-card.site-card {
+    height:190px;min-height:190px;max-height:190px;
+    gap:14px;padding-block:15px;
+  }
+  .work-card.project-row {
+    height:204px;min-height:204px;max-height:204px;
+    gap:14px;padding-block:15px;
+  }
+  .work-card .work-media,.work-card.project-row .work-media {
+    flex-basis:138px;width:138px;
+    height:122px;min-height:122px;max-height:122px;
+  }
+  .work-card .work-name {font-size:17px;}
+  .work-card .work-description.site-description,
+  .work-card .work-description.project-description {
+    font-size:12px;max-height:41px;line-height:1.45;margin-top:6px;
+  }
+  .work-card .project-meta {font-size:11px;margin-top:8px;}
+  .work-card .work-source-row .forge-link,
+  .work-card.project-row .work-source-row .forge-link {
+    width:34px;min-width:34px;height:34px;min-height:34px;
+  }
+}
+@media(max-width:365px) {
+  .work-card.site-card {height:193px;min-height:193px;max-height:193px;gap:11px;}
+  .work-card.project-row {height:213px;min-height:213px;max-height:213px;gap:11px;}
+  .work-card .work-media,.work-card.project-row .work-media {
+    flex-basis:112px;width:112px;
+    height:108px;min-height:108px;max-height:108px;
+  }
+  .work-card .work-name {font-size:16px;}
+}
+@media(max-height:700px) and (min-width:821px) {
+  body.atlas-active .atlas-view {
+    height:max(405px,calc(100dvh - 250px));
+    min-height:405px;
+    max-height:560px;
+  }
+}

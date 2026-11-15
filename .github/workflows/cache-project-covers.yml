@@ -1,0 +1,53 @@
+name: Cache project artwork
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 4 * * 0'
+  push:
+    branches: [main]
+    paths:
+      - scripts/cache-project-covers.mjs
+      - .github/workflows/cache-project-covers.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: cached-project-artwork
+  cancel-in-progress: false
+
+jobs:
+  cache:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install fallback screenshot browser
+        run: |
+          npm install --no-save --no-package-lock playwright@latest sharp@latest
+          npx playwright install --with-deps chromium
+      - name: Cache README screenshots and GitHub repository cards
+        run: node scripts/cache-project-covers.mjs
+      - name: Publish self-hosted artwork and offline image manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --mixed origin/main
+            git add public/previews/covers/
+            if git diff --cached --quiet; then
+              echo "Cached covers already match."
+              exit 0
+            fi
+            git commit -m "chore: cache README artwork and repository previews"
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 2
+          done
+          exit 1

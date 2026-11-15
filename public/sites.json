@@ -1,0 +1,65 @@
+[
+  {
+    "id": "scandeck",
+    "name": "ScanDeck",
+    "url": "https://scandeck.luizbizzio.com/",
+    "repo": "scandeck",
+    "category": "Games",
+    "description": "Play small games stored inside QR codes and barcodes.",
+    "icon": "./icons/scandeck.svg"
+  },
+  {
+    "id": "mypixel",
+    "name": "MyPixel",
+    "url": "https://mypixel.luizbizzio.com/",
+    "repo": "mypixel",
+    "category": "Tools",
+    "description": "Edit and export pixel art in your browser.",
+    "icon": "./icons/mypixel.svg"
+  },
+  {
+    "id": "windhawk-inspector",
+    "name": "Windhawk Inspector",
+    "url": "https://windhawk-inspector.luizbizzio.com/",
+    "repo": "windhawk-inspector",
+    "category": "Windhawk",
+    "description": "Review Windhawk mod source code and compare versions.",
+    "icon": "./icons/windhawk-inspector.svg"
+  },
+  {
+    "id": "windhawk-badges",
+    "name": "Windhawk Badges",
+    "url": "https://windhawk-badges.luizbizzio.com/",
+    "repo": "windhawk-badges",
+    "category": "Windhawk",
+    "description": "Create live SVG badges for Windhawk mods.",
+    "icon": "./icons/windhawk-badges.svg"
+  },
+  {
+    "id": "refreshrate",
+    "name": "Refresh Rate Test",
+    "url": "https://refreshrate.luizbizzio.com/",
+    "repo": "refreshrate",
+    "category": "Tools",
+    "description": "Measure screen refresh rate and test motion.",
+    "icon": "./icons/refreshrate.svg"
+  },
+  {
+    "id": "siteguard",
+    "name": "SiteGuard",
+    "url": "https://siteguard.luizbizzio.com/",
+    "repo": "siteguard",
+    "category": "Experiments",
+    "description": "Demo of basic browser content restrictions.",
+    "icon": "./icons/siteguard.svg"
+  },
+  {
+    "id": "capybara",
+    "name": "Capybara Game",
+    "url": "https://capybara.luizbizzio.com/",
+    "repo": "capybara",
+    "category": "Games",
+    "description": "A small browser click game made for fun.",
+    "icon": "./icons/capybara.svg"
+  }
+]

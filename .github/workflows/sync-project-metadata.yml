@@ -1,0 +1,51 @@
+name: Refresh portfolio repository metadata
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 1,7,13,19 * * *'
+  push:
+    branches: [main]
+    paths:
+      - scripts/sync-project-metadata.mjs
+      - .github/workflows/sync-project-metadata.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: portfolio-metadata-snapshot
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Retrieve latest repository pushes and published releases
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/sync-project-metadata.mjs
+      - name: Commit the offline metadata snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --mixed origin/main
+            git add public/project-metadata.json
+            if git diff --cached --quiet; then
+              echo "Metadata is already current."
+              exit 0
+            fi
+            git commit -m "chore: refresh cached release versions and update dates"
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 3
+          done
+          exit 1

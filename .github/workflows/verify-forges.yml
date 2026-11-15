@@ -1,0 +1,51 @@
+name: Verify forge mirrors
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '47 5 * * 0'
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/verify-forges.yml
+      - scripts/check-forges.mjs
+
+permissions:
+  contents: write
+
+concurrency:
+  group: verify-forges
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check public mirror APIs and update repository dates
+        run: node scripts/check-forges.mjs
+
+      - name: Publish new confirmed links
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin main
+          git reset --mixed origin/main
+          git add public/forges.json public/project-metadata.json
+          if git diff --cached --quiet; then
+            echo "No new verified mirrors."
+            exit 0
+          fi
+          git commit -m "chore: update verified forge mirrors"
+          git push origin HEAD:main
