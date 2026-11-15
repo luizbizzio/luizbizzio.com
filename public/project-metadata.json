@@ -1,259 +1,181 @@
 {
-  "version": 3,
-  "source": "Locally cached public GitHub repository and release metadata",
-  "updatedAt": "2026-11-15T02:40:26.611Z",
+  "version": 2,
+  "source": "Public GitHub descriptions, creation dates and last pushes cached for offline API independence",
+  "updatedAt": "2026-11-15T12:57:52.981Z",
   "repos": {
     "archive-preview": {
       "created": "2026-11-01T00:48:27Z",
       "updated": "2026-11-13T06:25:59Z",
       "description": "📦 Preview, browse, drag and extract ZIP, RAR, 7z, TAR and other compressed files directly in Windows File Explorer's Preview Pane.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-11-13T06:26:00Z",
-      "releaseChecked": true
+      "archived": false
     },
     "BannerlordFG": {
       "created": "2026-09-27T19:08:07Z",
       "updated": "2026-11-13T23:56:37Z",
       "description": "⚙️ Frame Generation and FSR 3.1 upscaling for Mount & Blade II: Bannerlord, integrated into the native Performance menu using OptiScaler and Intel XeFG.",
-      "archived": false,
-      "release": "v1.1.2",
-      "releasePublishedAt": "2026-11-13T23:56:37Z",
-      "releaseChecked": true
+      "archived": false
     },
     "capybara": {
       "created": "2024-10-23T01:52:44Z",
-      "updated": "2026-11-13T18:49:15Z",
+      "updated": "2026-11-15T12:24:56Z",
       "description": "🕹️ Capybara Game is a small, fast-paced web game where the goal is to catch as many capybaras as possible within a time limit.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-11-13T18:49:15Z",
-      "releaseChecked": true
+      "archived": false
     },
     "currency-exchange-exporter": {
       "created": "2024-08-10T02:53:36Z",
       "updated": "2026-08-07T06:07:55Z",
       "description": "💱 A lightweight Prometheus exporter written in Python that fetches currency exchange rates on a fixed interval and exposes selected currency pairs as metrics.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-05-02T15:14:39Z",
-      "releaseChecked": true
+      "archived": false
     },
     "emojis": {
       "created": "2023-05-29T00:26:15Z",
       "updated": "2026-05-05T13:23:43Z",
       "description": "😀 A detailed guide to emoji licensing, helping developers, designers, and organizations navigate the usage rights of popular emoji sets for personal or commercial projects.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-05-05T13:23:43Z",
-      "releaseChecked": true
+      "archived": false
     },
     "git-history-reset": {
       "created": "2026-03-01T00:04:07Z",
-      "updated": "2026-11-05T07:56:44Z",
+      "updated": "2026-11-15T11:34:27Z",
       "description": "🔁 Reset Git repository history into a single fresh commit with backup, GitHub repo selection, and Windows/Linux CLI support.",
-      "archived": false,
-      "release": "v1.1.0",
-      "releasePublishedAt": "2026-11-05T07:56:44Z",
-      "releaseChecked": true
+      "archived": false
     },
     "grafana-all-in-one": {
       "created": "2023-05-30T02:00:29Z",
       "updated": "2026-04-28T00:00:00Z",
       "description": "📊 A comprehensive dashboard that integrates data from various sources such as Raspberry Pi, Windows systems, PiKVM, Solis inverters, Tuya smart plugs, and more. Visualize key metrics like system performance, energy consumption, currency exchange rates, and solar power generation in one place.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-03-21T00:08:10Z",
-      "releaseChecked": true
+      "archived": false
     },
     "grafana-wallpaper": {
       "created": "2024-08-08T19:53:14Z",
       "updated": "2026-04-28T00:06:39Z",
       "description": "🖥️ A detailed guide on how to set up Grafana and display its dashboards as your desktop wallpaper. This project allows you to transform your data visualizations into an interactive real-time monitoring background, making data always visible.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-02-23T21:44:23Z",
-      "releaseChecked": true
+      "archived": false
     },
     "knight-adventures": {
       "created": "2025-03-28T16:16:12Z",
       "updated": "2026-04-28T00:09:34Z",
       "description": "🎮 Knight Adventures is a 2D retro platformer about a mysterious knight on a journey across forests, cities, mountains, and even space. Guided by strange symbols and unlikely allies, you’ll explore hidden paths, surreal encounters, and unexpected twists. ",
-      "archived": true,
-      "release": "v0.6",
-      "releasePublishedAt": "2026-03-21T00:04:42Z",
-      "releaseChecked": true
+      "archived": true
     },
     "local-https": {
       "created": "2025-01-04T14:05:20Z",
       "updated": "2026-09-21T10:46:44Z",
       "description": "🔒 Automatic local HTTPS for Pi-hole, Technitium DNS, Tailscale and homelabs. Local Root CA, trusted certificates, auto-renewal and deployment.",
-      "archived": false,
-      "release": "v1.1.2",
-      "releasePublishedAt": "2026-08-13T03:03:17Z",
-      "releaseChecked": true
+      "archived": false
     },
     "lune-bot": {
       "created": "2023-05-31T12:18:54Z",
       "updated": "2026-11-08T19:48:55Z",
       "description": "🤖 WhatsApp bot built with JavaScript using the OpenWA library. It provides a variety of features, including entertainment, administration tools, news updates, games, and utility functions, offering a fun and functional bot experience.",
-      "archived": true,
-      "release": "v2023-final",
-      "releasePublishedAt": "2026-06-26T11:31:28Z",
-      "releaseChecked": true
+      "archived": true
     },
     "mypixel": {
       "created": "2025-05-14T01:21:13Z",
       "updated": "2026-11-13T17:52:02Z",
       "description": "🎨 MyPixel simplifies pixel art enhancement with powerful upscaling, vectorization, and batch processing. Ideal for designers, developers, and digital artists.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-11-13T17:52:02Z",
-      "releaseChecked": true
+      "archived": false
     },
     "one-click-bios": {
       "created": "2026-02-23T16:03:38Z",
       "updated": "2026-04-11T23:09:28Z",
       "description": "🖱️Restart Windows directly into BIOS/UEFI with one click from the Start Menu.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-04-11T23:09:28Z",
-      "releaseChecked": true
+      "archived": false
     },
     "power-alert": {
       "created": "2024-08-08T03:09:19Z",
       "updated": "2026-03-22T17:01:49Z",
       "description": "⚡ A Python script to detect power outages and restorations by monitoring home devices. It sends automated email alerts when power status changes, providing quick notifications for any disruptions in power supply.",
-      "archived": true,
-      "release": "",
-      "releasePublishedAt": "",
-      "releaseChecked": true
+      "archived": true
     },
     "recycle-bin-file-preview": {
       "created": "2026-10-30T03:42:11Z",
       "updated": "2026-11-12T16:15:46Z",
       "description": "🗑️ Enable native file previews in the Windows Recycle Bin without restoring files.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-11-12T16:15:46Z",
-      "releaseChecked": true
+      "archived": false
     },
     "refreshrate": {
       "created": "2025-01-18T06:00:38Z",
       "updated": "2026-11-13T17:27:57Z",
       "description": "🖥️🔃 Refresh Rate Test: A real-time tool to monitor your screen's refresh rate and FPS. It visualizes performance with ghost count animations, helping you optimize display settings for the smoothest visual experience.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-11-13T17:27:57Z",
-      "releaseChecked": true
+      "archived": false
     },
     "scandeck": {
       "created": "2026-11-11T20:59:33Z",
-      "updated": "2026-11-15T02:27:46Z",
+      "updated": "2026-11-15T12:55:14Z",
       "description": "🎮 Scan, create, and play mini-games stored directly inside QR codes and barcodes, without external links.",
-      "archived": false,
-      "release": "",
-      "releasePublishedAt": "",
-      "releaseChecked": true
+      "archived": false
     },
     "silent-chipolo": {
       "created": "2026-10-21T01:11:00Z",
       "updated": "2026-10-21T02:40:52Z",
       "description": "🔇 A step-by-step photo guide to removing the Chipolo LOOP speaker, with disassembly, reassembly, and safety notes.",
-      "archived": false,
-      "release": "",
-      "releasePublishedAt": "",
-      "releaseChecked": true
+      "archived": false
     },
     "siteguard": {
       "created": "2024-10-26T11:08:19Z",
-      "updated": "2026-11-14T09:31:06Z",
+      "updated": "2026-11-15T11:58:48Z",
       "description": "🛡️ A JavaScript utility that detects when developer tools are opened in web browsers. It blocks right-click actions, drag events, and certain keyboard shortcuts to enhance the protection of web content from unauthorized inspection or tampering.",
-      "archived": false,
-      "release": "v1.1.2",
-      "releasePublishedAt": "2026-03-22T17:11:38Z",
-      "releaseChecked": true
+      "archived": false
     },
     "solis-inverter-exporter": {
       "created": "2024-08-09T22:49:41Z",
       "updated": "2026-07-30T16:47:29Z",
       "description": "☀️ A Prometheus exporter written in Python to collect and expose metrics from Solis inverters. It helps monitor solar inverter performance by gathering data on power generation, efficiency, and other key parameters.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-05-02T15:02:59Z",
-      "releaseChecked": true
+      "archived": false
     },
     "tailscale-control": {
       "created": "2026-02-28T01:29:06Z",
       "updated": "2026-10-21T03:56:16Z",
       "description": "🎛️ A Windows tray app for faster Tailscale control, hotkeys, account switching, and diagnostics.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-06-16T01:43:19Z",
-      "releaseChecked": true
+      "archived": false
     },
     "tailscale-mtu": {
       "created": "2025-01-04T11:36:15Z",
       "updated": "2026-10-21T03:56:39Z",
       "description": "🌐 Persistent MTU management for Tailscale across reboots and interface resets on Windows and Linux.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-05-01T02:19:24Z",
-      "releaseChecked": true
+      "archived": false
     },
     "task-manager-pause-button": {
       "created": "2026-11-09T19:37:59Z",
       "updated": "2026-11-14T01:26:40Z",
       "description": "⏸️ Adds a native Pause/Resume button to Windows 11 Task Manager, allowing you to pause process list updates with one click.",
-      "archived": false,
-      "release": "v1.1.0",
-      "releasePublishedAt": "2026-11-14T01:26:40Z",
-      "releaseChecked": true
+      "archived": false
     },
     "taskbar-zones": {
       "created": "2026-11-03T08:23:32Z",
       "updated": "2026-11-12T16:10:31Z",
       "description": "↔️ Organize Windows 11 taskbar apps into fixed left and right zones. Drag icons between sides and keep their positions when apps open or close.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-11-12T16:10:32Z",
-      "releaseChecked": true
+      "archived": false
     },
     "tuya-smart-plug-exporter": {
       "created": "2024-08-09T19:48:26Z",
       "updated": "2026-07-30T16:47:24Z",
       "description": "🔌 Prometheus exporter for Tuya smart plugs using local network polling via TinyTuya, with automatic DPS and scaling autodiscovery for voltage, current, power, and relay metrics.",
-      "archived": false,
-      "release": "v1.0.1",
-      "releasePublishedAt": "2026-05-02T15:02:52Z",
-      "releaseChecked": true
+      "archived": false
     },
     "windhawk-badges": {
       "created": "2026-11-05T08:37:37Z",
-      "updated": "2026-11-13T20:03:32Z",
+      "updated": "2026-11-15T12:10:28Z",
       "description": "🏷️ Create live, customizable SVG badges for Windhawk mods, with updated stats and ready-to-copy Markdown for GitHub.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-11-13T20:03:32Z",
-      "releaseChecked": true
+      "archived": false
     },
     "windhawk-inspector": {
       "created": "2026-11-08T19:42:59Z",
-      "updated": "2026-11-13T19:58:40Z",
+      "updated": "2026-11-15T12:15:14Z",
       "description": "🔍 Analyze Windhawk mod source code in your browser. Identify sensitive capabilities, review security findings, and compare versions without running the code.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-11-13T19:58:40Z",
-      "releaseChecked": true
+      "archived": false
+    },
+    "windhawk-mods": {
+      "created": "2026-10-30T04:07:45Z",
+      "updated": "2026-11-15T07:34:09Z",
+      "description": "The official collection of Windhawk mods",
+      "archived": false
     },
     "windows-auto-hotspot": {
       "created": "2024-10-22T22:02:26Z",
       "updated": "2026-10-23T11:03:18Z",
       "description": "🛜 A PowerShell script designed to automatically enable and disable your PC's Wi-Fi hotspot based on the Ethernet connection status. Ideal for laptops, it activates the hotspot when Ethernet is connected, ensuring seamless internet sharing without manual intervention.",
-      "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-03-21T00:01:33Z",
-      "releaseChecked": true
+      "archived": false
     }
   }
 }

@@ -27,6 +27,7 @@
       "taskbar-zones": "https://gitlab.com/luizbizzio1/taskbar-zones",
       "tuya-smart-plug-exporter": "https://gitlab.com/luizbizzio1/tuya-smart-plug-exporter",
       "windhawk-badges": "https://gitlab.com/luizbizzio1/windhawk-badges",
+      "windhawk-mods": "https://gitlab.com/luizbizzio1/windhawk-mods",
       "windows-auto-hotspot": "https://gitlab.com/luizbizzio1/windows-auto-hotspot"
     },
     "codeberg": {
@@ -39,6 +40,7 @@
       "grafana-all-in-one": "https://codeberg.org/luizbizzio/grafana-all-in-one",
       "grafana-wallpaper": "https://codeberg.org/luizbizzio/grafana-wallpaper",
       "local-https": "https://codeberg.org/luizbizzio/local-https",
+      "luizbizzio.com": "https://codeberg.org/luizbizzio/luizbizzio.com",
       "mypixel": "https://codeberg.org/luizbizzio/mypixel",
       "one-click-bios": "https://codeberg.org/luizbizzio/one-click-bios",
       "recycle-bin-file-preview": "https://codeberg.org/luizbizzio/recycle-bin-file-preview",
