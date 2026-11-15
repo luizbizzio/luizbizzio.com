@@ -1,7 +1,7 @@
 {
   "version": 3,
   "source": "Locally cached public GitHub repository and release metadata",
-  "updatedAt": "2026-11-15T14:56:29.654Z",
+  "updatedAt": "2026-11-15T23:29:58.637Z",
   "repos": {
     "archive-preview": {
       "created": "2026-11-01T00:48:27Z",
@@ -149,11 +149,11 @@
     },
     "scandeck": {
       "created": "2026-11-11T20:59:33Z",
-      "updated": "2026-11-15T12:55:14Z",
+      "updated": "2026-11-15T21:43:53Z",
       "description": "🎮 Scan, create, and play mini-games stored directly inside QR codes and barcodes, without external links.",
       "archived": false,
       "release": "v1.0.0",
-      "releasePublishedAt": "2026-11-15T03:56:49Z",
+      "releasePublishedAt": "2026-11-15T21:43:54Z",
       "releaseChecked": true
     },
     "silent-chipolo": {
@@ -167,7 +167,7 @@
     },
     "siteguard": {
       "created": "2024-10-26T11:08:19Z",
-      "updated": "2026-11-15T11:58:48Z",
+      "updated": "2026-11-15T15:31:56Z",
       "description": "🛡️ A JavaScript utility that detects when developer tools are opened in web browsers. It blocks right-click actions, drag events, and certain keyboard shortcuts to enhance the protection of web content from unauthorized inspection or tampering.",
       "archived": false,
       "release": "v1.1.2",
