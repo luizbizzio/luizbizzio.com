@@ -1,7 +1,7 @@
 {
   "version": 3,
   "source": "Locally cached public GitHub repository and release metadata",
-  "updatedAt": "2026-11-15T23:29:58.637Z",
+  "updatedAt": "2026-11-16T08:32:51.996Z",
   "repos": {
     "archive-preview": {
       "created": "2026-11-01T00:48:27Z",
@@ -41,7 +41,7 @@
     },
     "emojis": {
       "created": "2023-05-29T00:26:15Z",
-      "updated": "2026-05-05T13:23:43Z",
+      "updated": "2026-11-16T00:43:23Z",
       "description": "😀 A detailed guide to emoji licensing, helping developers, designers, and organizations navigate the usage rights of popular emoji sets for personal or commercial projects.",
       "archived": false,
       "release": "v1.0.0",
@@ -86,7 +86,7 @@
     },
     "local-https": {
       "created": "2025-01-04T14:05:20Z",
-      "updated": "2026-09-21T10:46:44Z",
+      "updated": "2026-11-16T03:16:19Z",
       "description": "🔒 Automatic local HTTPS for Pi-hole, Technitium DNS, Tailscale and homelabs. Local Root CA, trusted certificates, auto-renewal and deployment.",
       "archived": false,
       "release": "v1.1.2",
