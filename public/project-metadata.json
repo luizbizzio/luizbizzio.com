@@ -1,15 +1,15 @@
 {
   "version": 3,
   "source": "Locally cached public GitHub repository and release metadata",
-  "updatedAt": "2026-11-18T09:02:32.879Z",
+  "updatedAt": "2026-11-18T21:33:40.089Z",
   "repos": {
     "archive-preview": {
       "created": "2026-11-01T00:48:27Z",
-      "updated": "2026-11-18T02:56:29Z",
+      "updated": "2026-11-18T11:04:26Z",
       "description": "📦 Preview, browse, drag and extract ZIP, RAR, 7z, TAR and other compressed files directly in Windows File Explorer's Preview Pane.",
       "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-11-13T06:26:00Z",
+      "release": "v1.1.0",
+      "releasePublishedAt": "2026-11-18T11:04:26Z",
       "releaseChecked": true
     },
     "BannerlordFG": {
