@@ -1,11 +1,11 @@
 {
   "version": 3,
   "source": "Locally cached public GitHub repository and release metadata",
-  "updatedAt": "2026-11-17T09:42:18.470Z",
+  "updatedAt": "2026-11-18T09:02:32.879Z",
   "repos": {
     "archive-preview": {
       "created": "2026-11-01T00:48:27Z",
-      "updated": "2026-11-13T06:25:59Z",
+      "updated": "2026-11-18T02:56:29Z",
       "description": "📦 Preview, browse, drag and extract ZIP, RAR, 7z, TAR and other compressed files directly in Windows File Explorer's Preview Pane.",
       "archived": false,
       "release": "v1.0.0",
