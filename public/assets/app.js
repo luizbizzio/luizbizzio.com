@@ -150,13 +150,17 @@
     });
   }
 
+  const forgeIcon = provider =>
+    '<span class="forge-symbol forge-' + provider + '" aria-hidden="true"></span>';
+
   function forgeMarkup(item) {
     const links = getForgeTargets(item).map(({provider, label, url, verified}) => {
+      const caption = forgeIcon(provider) + label;
       if (!verified) return '<span class="source-link source-unavailable" title="' +
-        label + ' mirror unavailable">' + label + '<span class="sr-only"> mirror unavailable</span></span>';
+        label + ' mirror unavailable">' + caption + '<span class="sr-only"> mirror unavailable</span></span>';
       return '<a class="source-link" data-forge="' + provider + '" href="' + escapeHTML(url) +
         '" target="_blank" rel="noopener noreferrer" aria-label="' + label + ' for ' +
-        escapeHTML(item.name) + '">' + label + '</a>';
+        escapeHTML(item.name) + '">' + caption + '</a>';
     });
     return links.length ? '<div class="repository-sources" role="group" aria-label="Source repositories">' +
       links.join('') + '</div>' : '';
@@ -199,7 +203,8 @@
         escapeHTML(repositoryName(item)) + '</span><span class="release-meta"><span class="release-tag">' +
         escapeHTML(tag) + '</span><time datetime="' + escapeHTML(date) + '">' +
         escapeHTML(releaseDateFormat.format(new Date(date))) + '</time></span>' +
-        '<span class="release-external" aria-hidden="true">↗</span></a></li>';
+        '<span class="release-external">' + forgeIcon('github') +
+        '<span class="sr-only"> on GitHub</span></span></a></li>';
     }).join('');
   }
 

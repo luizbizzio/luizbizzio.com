@@ -54,6 +54,9 @@ try {
   assert.equal(await projects.getByRole('button', {name:'Gitmirror', exact:true}).count(), 0);
 
   await page.waitForFunction(() => document.querySelectorAll('#projectsList a.source-link').length === 96);
+  for (const provider of ['github', 'gitlab', 'codeberg']) {
+    assert.equal(await projects.locator('a[data-forge="' + provider + '"] .forge-' + provider).count(), 32);
+  }
   const repos = await projects.evaluateAll(rows => rows.map(row => ({
     name: row.querySelector('[data-project]').dataset.project,
     links: [...row.querySelectorAll('a[data-forge]')].map(link => [link.textContent, link.hostname, link.pathname])
@@ -94,6 +97,7 @@ try {
   });
   await page.locator('#recentReleases').waitFor({state: 'visible'});
   assert.equal(await page.locator('.release-link').count(), 5);
+  assert.equal(await page.locator('.release-link .forge-github').count(), 5);
   for (const [index, [name, entry]] of releases.entries()) {
     const release = page.locator('.release-link').nth(index);
     assert.equal(await release.locator('.release-repo').innerText(), name);
