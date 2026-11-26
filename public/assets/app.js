@@ -2,7 +2,7 @@
 (() => {
   'use strict';
   const OWNER = 'luizbizzio';
-  const GITLAB_OWNER = 'luizbizzio1';
+  const GITLAB_OWNER = 'luizbizzio';
   const GH = 'https://github.com/' + OWNER + '/';
   // Add a confirmed mirror here when one is published. Until then the site uses
   // the requested owner/repository path and clearly marks it as unverified.
@@ -50,11 +50,16 @@
     ['emojis', 'A guide to emoji artwork and licenses.', 'Other'],
     ['lune-bot', 'A WhatsApp bot project.', 'Other', true],
     ['power-alert', 'A system for power outage alerts.', 'Hardware', true],
-    ['knight-adventures', 'Game installation and walkthrough.', 'Games', true]
+    ['knight-adventures', 'Game installation and walkthrough.', 'Games', true],
+    ['codepuff', 'A pixel-art coding pet that reacts to your coding agent.', 'Tools'],
+    ['voicebuffer', 'Adjust the incoming voice buffer in Discord Desktop.', 'Tools'],
+    ['uninstall-here', 'Open app uninstallers directly from the Windows 11 Start menu.', 'Windhawk'],
+    ['urlforge', 'Compress long URLs into self-contained links in your browser.', 'Tools']
   ];
   const TITLE = {
     scandeck: 'ScanDeck', mypixel: 'MyPixel', refreshrate: 'Refresh Rate Test',
-    BannerlordFG: 'BannerlordFG', siteguard: 'SiteGuard'
+    BannerlordFG: 'BannerlordFG', siteguard: 'SiteGuard',
+    codepuff: 'CodePuff', voicebuffer: 'VoiceBuffer', urlforge: 'URLForge'
   };
   const COVER_FILES = {
     mypixel: 'mypixel.jpg', refreshrate:'refreshrate.png',
@@ -112,10 +117,10 @@
     return isHttps(url) || /^\.\/previews\/(?:covers\/)?[a-z0-9._-]+\.(jpg|webp|png)$/i.test(url || '');
   }
   function safeIcon(url) {
-    return isHttps(url) || /^\.\/icons\/[a-z0-9._-]+\.svg$/i.test(url || '');
+    return isHttps(url) || /^\.\/icons\/[a-z0-9._-]+\.(svg|png)$/i.test(url || '');
   }
 
-  const WEBSITE_COVERS = new Set(['scandeck','windhawk-badges','windhawk-inspector','siteguard']);
+  const WEBSITE_COVERS = new Set(['scandeck','windhawk-badges','windhawk-inspector','siteguard','urlforge']);
   function imageSources(item) {
     const images = [];
     const site = item.kind === 'site' ? item : state.sites.find(s => s.repo === item.repo);

@@ -1,7 +1,7 @@
 {
   "version": 3,
   "source": "Locally cached public GitHub repository and release metadata",
-  "updatedAt": "2026-11-25T10:23:53.322Z",
+  "updatedAt": "2026-11-26T01:38:25.866Z",
   "repos": {
     "archive-preview": {
       "created": "2026-11-01T00:48:27Z",
@@ -30,6 +30,15 @@
       "releasePublishedAt": "2026-11-13T18:49:15Z",
       "releaseChecked": true
     },
+    "codepuff": {
+      "created": "2026-11-23T17:42:27Z",
+      "updated": "2026-11-25T18:36:08Z",
+      "description": "👾 A customizable pixel-art coding pet for Claude Code and OpenAI Codex, with real-time agent activity, coding statistics, and persistent progress.",
+      "archived": false,
+      "release": "v1.1.0",
+      "releasePublishedAt": "2026-11-25T18:36:09Z",
+      "releaseChecked": true
+    },
     "currency-exchange-exporter": {
       "created": "2024-08-10T02:53:36Z",
       "updated": "2026-11-25T04:29:16Z",
@@ -55,15 +64,6 @@
       "archived": false,
       "release": "v1.1.0",
       "releasePublishedAt": "2026-11-05T07:56:44Z",
-      "releaseChecked": true
-    },
-    "gitmirror": {
-      "created": "2026-11-18T02:04:59Z",
-      "updated": "2026-11-25T04:29:17Z",
-      "description": "",
-      "archived": false,
-      "release": "",
-      "releasePublishedAt": "",
       "releaseChecked": true
     },
     "grafana-all-in-one": {
@@ -235,6 +235,33 @@
       "archived": false,
       "release": "v1.0.1",
       "releasePublishedAt": "2026-05-02T15:02:52Z",
+      "releaseChecked": true
+    },
+    "uninstall-here": {
+      "created": "2026-11-23T13:38:55Z",
+      "updated": "2026-11-25T13:17:59Z",
+      "description": "⏏️ Open desktop app uninstallers directly from the Windows 11 Start menu, without opening Settings or Control Panel.",
+      "archived": false,
+      "release": "v1.0.0",
+      "releasePublishedAt": "2026-11-25T13:17:59Z",
+      "releaseChecked": true
+    },
+    "urlforge": {
+      "created": "2026-09-19T02:46:14Z",
+      "updated": "2026-11-25T04:36:39Z",
+      "description": "🔗 A privacy-focused URL shortener that compresses and restores links locally in your browser without relying on external services or databases.",
+      "archived": false,
+      "release": "v1.0.0",
+      "releasePublishedAt": "2026-11-25T00:55:00Z",
+      "releaseChecked": true
+    },
+    "voicebuffer": {
+      "created": "2026-08-29T10:05:45Z",
+      "updated": "2026-11-25T17:19:55Z",
+      "description": "🎙️ Tune Discord Desktop’s jitter buffer for incoming voice with adaptive and manual controls. An experimental plugin for Vencord and Equicord.",
+      "archived": false,
+      "release": "v1.0.0",
+      "releasePublishedAt": "2026-11-25T17:19:56Z",
       "releaseChecked": true
     },
     "windhawk-badges": {

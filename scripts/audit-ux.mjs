@@ -3,6 +3,7 @@
 import {spawn} from 'node:child_process';
 import {setTimeout as delay} from 'node:timers/promises';
 import fs from 'node:fs/promises';
+import {fileURLToPath} from 'node:url';
 import {chromium} from 'playwright';
 import axe from 'axe-core';
 
@@ -37,8 +38,8 @@ try {
     await page.route('https://raw.githubusercontent.com/**',r=>r.abort());
     await page.route('https://cdn.jsdelivr.net/**',r=>r.abort());
     await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
-    await page.waitForFunction(()=>window.HubDirectory?.sites()?.length===7 &&
-      window.HubDirectory?.projects()?.length===28);
+    await page.waitForFunction(()=>window.HubDirectory?.sites()?.length===8 &&
+      window.HubDirectory?.projects()?.length===32);
     await page.addScriptTag({content:axe.source});
     const scenarios=[
       {tab:'sites',view:'showcase'},{tab:'sites',view:'grid'},
@@ -63,8 +64,8 @@ try {
             Number.parseFloat(getComputedStyle(img).opacity)>=.98);
         },gridSelector,{timeout:15000});
       }
-      await page.screenshot({path:new URL(size.name+'-'+scenario.tab+'-'+scenario.view+'.png',output)
-        .pathname,animations:'disabled',timeout:15000,fullPage:false});
+      const screenshotPath = fileURLToPath(new URL(size.name+'-'+scenario.tab+'-'+scenario.view+'.png',output));
+      await page.screenshot({path:screenshotPath,animations:'disabled',timeout:15000,fullPage:false});
       const metrics=await page.evaluate(()=>{
         const nodes=[...document.querySelectorAll(
           '.work-card:not([hidden]) .work-content')].filter(el=>el.getClientRects().length);

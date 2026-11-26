@@ -3,7 +3,7 @@
 import fs from 'node:fs/promises';
 
 const OWNER = 'luizbizzio';
-const GITLAB_OWNER = 'luizbizzio1';
+const GITLAB_OWNER = 'luizbizzio';
 const OUTPUT = new URL('../public/forges.json', import.meta.url);
 const hosts = {gitlab: 'gitlab.com', codeberg: 'codeberg.org'};
 const forgeOwners = {gitlab: GITLAB_OWNER, codeberg: OWNER};
@@ -41,11 +41,22 @@ if (!Array.isArray(data) || !data.length) {
   console.warn('GitHub API unavailable: preserving the last committed repository catalog and mirrors.');
   process.exit(0);
 }
-const names = data
+const metaFile = new URL('../public/project-metadata.json', import.meta.url);
+let cached;
+try {
+  cached = JSON.parse(await fs.readFile(metaFile, 'utf8'));
+} catch {}
+const previous = cached?.repos || {};
+const savedSlugs = new Map(Object.keys(previous).map(name => [name.toLowerCase(), name]));
+const publicRepos = data
   .filter(item => item && item.private === false && item.name !== OWNER &&
     /^[a-zA-Z0-9._-]+$/.test(item.name))
-  .map(item => item.name);
-const verified = {gitlab: {...(saved.verified.gitlab || {})}, codeberg: {...(saved.verified.codeberg || {})}};
+  .map(item => ({...item, name: savedSlugs.get(item.name.toLowerCase()) || item.name}));
+const names = publicRepos.map(item => item.name);
+const currentRepos = new Set(names);
+const verified = Object.fromEntries(Object.keys(forgeOwners).map(forge => [forge,
+  Object.fromEntries(Object.entries(saved.verified[forge] || {}).filter(([repo, url]) =>
+    currentRepos.has(repo) && isOwnMirror(url, forge, repo)))]));
 let found = 0;
 
 // Keep traffic moderate and avoid requiring any access tokens.
@@ -90,26 +101,22 @@ console.log('Total verified mirror links:', count);
 console.log('All other destinations stay as marked, unverified fallback paths.');
 
 // The static catalog is the source of truth for site visitors.
- // This workflow updates it only after a successful GitHub fetch.
-const metaFile = new URL('../public/project-metadata.json', import.meta.url);
-let previous = {};
-try {
-  const cached = JSON.parse(await fs.readFile(metaFile, 'utf8'));
-  previous = cached.repos || {};
-} catch {}
-const repos = data.filter(item =>
-  item && item.private === false && item.name !== OWNER &&
-  item.name !== 'luizbizzio.com' && /^[a-zA-Z0-9._-]+$/.test(item.name));
+// This workflow updates it only after a successful GitHub fetch.
+const repos = publicRepos.filter(item => !['luizbizzio.com', 'windhawk-mods'].includes(item.name));
 const metadata = {
-  version: 2,
-  source: 'Public GitHub descriptions, creation dates and last pushes cached for offline API independence',
+  version: 3,
+  source: 'Locally cached public GitHub repository and release metadata',
   updatedAt: new Date().toISOString(),
   repos: Object.fromEntries(repos.map(item => [item.name,{
+    ...previous[item.name],
     created: item.created_at || previous[item.name]?.created || '',
     updated: item.pushed_at || item.updated_at || previous[item.name]?.updated || '',
     description: item.description || previous[item.name]?.description || '',
     archived: !!item.archived
   }]).sort(([a],[b]) => a.localeCompare(b)))
 };
-await fs.writeFile(metaFile, JSON.stringify(metadata,null,2) + '\n');
+if (cached?.version !== metadata.version || cached.source !== metadata.source ||
+    JSON.stringify(previous) !== JSON.stringify(metadata.repos)) {
+  await fs.writeFile(metaFile, JSON.stringify(metadata,null,2) + '\n');
+}
 console.log('Local official GitHub descriptions and metadata refreshed:',repos.length);

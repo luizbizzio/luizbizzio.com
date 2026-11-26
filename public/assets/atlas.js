@@ -127,7 +127,8 @@
     // Show every position, with clickable targets when they fit.
     // On narrow screens, large collections use visual-only markers. The
     // 42px arrows and project chooser remain accessible for navigation.
-    const interactive = !(compactPagination.matches && count > 7);
+    const interactive = !(compactPagination.matches && count > 7) &&
+      count * 24 <= el.pagination.parentElement.clientWidth;
     const tag = interactive ? 'button' : 'span';
     el.pagination.style.setProperty('--pagination-count', String(count));
     if (interactive) el.pagination.removeAttribute('aria-hidden');
@@ -1086,14 +1087,14 @@
   if ('ResizeObserver' in window) {
     const observer = new ResizeObserver(() => {
       setSize();
-      alignPagination();
+      if (state.active) renderPagination();
     });
     observer.observe(el.host);
     observer.observe(el.stage);
   } else {
     window.addEventListener('resize', () => {
       setSize();
-      alignPagination();
+      if (state.active) renderPagination();
     });
   }
   reduced.addEventListener?.('change',()=>requestRender());

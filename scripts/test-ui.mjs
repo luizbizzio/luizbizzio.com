@@ -36,7 +36,7 @@ try {
     // Atlas must render using local Three.js even with the public CDN blocked.
     await page.route('https://cdn.jsdelivr.net/**', route => route.abort());
     await page.goto(origin + '/', {waitUntil: 'domcontentloaded'});
-    await page.waitForFunction(() => document.querySelector('#sitesCount')?.textContent === '07');
+    await page.waitForFunction(() => document.querySelector('#sitesCount')?.textContent === '08');
     return {page, failures, apiCalls};
   }
 
@@ -47,7 +47,11 @@ try {
     'The expanded desktop catalog must fill more of the available screen');
   assert.equal((await page.locator('#viewGrid').innerText()).trim(), 'Grid');
   assert.equal((await page.locator('#viewAtlas').innerText()).trim(), '3D');
-  assert.equal(await page.locator('#sitesGrid .site-card').count(), 7, 'Expected seven live websites');
+  assert.equal(await page.locator('#sitesGrid .site-card').count(), 8, 'Expected eight live websites');
+  const urlforge = page.locator('#sitesGrid .site-card').filter({hasText: 'URLForge'});
+  assert.equal(await urlforge.locator('a').getAttribute('href'), 'https://uf.do/');
+  assert.equal(await urlforge.locator('.title-favicon').getAttribute('src'), './icons/urlforge.png');
+  assert.equal(await urlforge.locator('img[data-sources]').getAttribute('src'), './previews/urlforge.jpg');
   assert.equal(await page.locator('#resultCount, #resetFilters, .section-meta').count(), 0,
     'Remove the redundant counter and clear-filter row from the DOM');
   assert.equal(await page.locator('#clearButton').innerText(), 'Show all',
@@ -184,8 +188,8 @@ try {
     'Right-hand website icon must come from the local icon collection');
   assert((await page.locator('#atlasCanvas canvas').evaluate(c => c.width)) >= 600,
     'Real WebGL canvas must be rendered, not an HTML fallback');
-  assert.equal(await page.locator('#atlasPagination .atlas-marker').count(), 7,
-    'Website Showcase must have seven selectable positions');
+  assert.equal(await page.locator('#atlasPagination .atlas-marker').count(), 8,
+    'Website Showcase must have eight selectable positions');
   assert(await page.locator('#atlasPagination').isVisible(),
     'Carousel position dots should be visible outside the framed 3D scene');
   assert.equal(await page.locator('#directoryPanel #atlasPagination').count(),0,
@@ -264,9 +268,9 @@ try {
   assert(await page.locator('#sitesGrid').isVisible(), 'Gallery remains an option');
   assert(await page.locator('#atlasPagination').isHidden(),
     'Outside dots should hide when the Grid is selected');
-  assert.equal(await page.locator('#sitesGrid .work-title-text').count(), 7,
+  assert.equal(await page.locator('#sitesGrid .work-title-text').count(), 8,
     'Website names have one readable text label');
-  assert.equal(await page.locator('#sitesGrid .title-favicon').count(), 7,
+  assert.equal(await page.locator('#sitesGrid .title-favicon').count(), 8,
     'Every website must show its favicon immediately before the title');
   assert.equal(await page.locator('#sitesGrid .media-favicon').count(), 0,
     'Favicons no longer overlap Grid screenshots');
@@ -314,11 +318,11 @@ try {
     'Every website card must remain exactly the same height');
   assert.equal(await page.locator('#sitesGrid .site-card .forge-link').count(), 0,
     'Website cards should not repeat repository links, available in details');
-  assert.equal(await page.locator('#sitesGrid .work-media').count(), 7,
-    'Grid must show seven real screenshot thumbnails');
-  assert.equal(await page.locator('#sitesGrid .work-name button').count(), 7,
+  assert.equal(await page.locator('#sitesGrid .work-media').count(), 8,
+    'Grid must show eight real screenshot thumbnails');
+  assert.equal(await page.locator('#sitesGrid .work-name button').count(), 8,
     'Each website should have one title that opens details');
-  assert.equal(await page.locator('#sitesGrid .work-name .work-title-text').count(), 7,
+  assert.equal(await page.locator('#sitesGrid .work-name .work-title-text').count(), 8,
     'Readable website titles must remain paired with the icon');
   await page.locator('#sitesTab').focus();
   await page.keyboard.press('ArrowRight');
@@ -334,7 +338,7 @@ try {
   assert.match(await page.locator('#emptyMessage').innerText(), /not-a-real-project/);
   assert(await page.locator('#clearSearch').isVisible(), 'Search clear must be visible with text');
   await page.locator('#clearButton').click();
-  assert.equal(await page.locator('#sitesGrid .site-card').count(), 7);
+  assert.equal(await page.locator('#sitesGrid .site-card').count(), 8);
   await page.locator('#searchInput').fill('MyPixel');
   await page.keyboard.press('Enter');
   assert(await page.locator('#previewDialog').isVisible(),
@@ -346,7 +350,7 @@ try {
     'Do not show duplicate result counts or clear-filter actions');
   await page.locator('#categorySelect').selectOption('All');
   assert.equal(await page.locator('#categorySelect').inputValue(), 'All');
-  assert.equal(await page.locator('#sitesGrid .site-card').count(), 7);
+  assert.equal(await page.locator('#sitesGrid .site-card').count(), 8);
   await page.locator('#projectsTab').click();
   const scandeck = page.locator('#projectsGrid .project-row').filter({hasText: 'ScanDeck'});
   const manifest = await page.evaluate(async () =>
@@ -354,7 +358,7 @@ try {
   const expectedForges = [
     ['github', 'https://github.com/luizbizzio/scandeck', 'true'],
     ['gitlab', manifest.verified.gitlab.scandeck ||
-      'https://gitlab.com/luizbizzio1/scandeck',
+      'https://gitlab.com/luizbizzio/scandeck',
       String(Boolean(manifest.verified.gitlab.scandeck))],
     ['codeberg', manifest.verified.codeberg.scandeck ||
       'https://codeberg.org/luizbizzio/scandeck',
@@ -380,7 +384,7 @@ try {
   await page.locator('#viewAtlas').click();
   assert(await page.locator('#atlasView').isVisible(), 'Atlas mode should be visible');
   assert.equal(await page.locator('#viewAtlas').getAttribute('aria-pressed'), 'true');
-  assert.equal(await page.locator('#atlasSelect option').count(), 8);
+  assert.equal(await page.locator('#atlasSelect option').count(), 9);
   await page.locator('#atlasSelect').selectOption('1');
   assert.equal(await page.locator('#atlasTitle').innerText(), 'MyPixel');
   await page.locator('#atlasExplore').click();
@@ -424,15 +428,29 @@ try {
   assert.equal(await page.locator('#projectsTab').getAttribute('aria-selected'), 'true');
   assert.equal(await page.locator('#sortSelect').inputValue(), 'recent');
 
-  assert.equal(await page.locator('#projectsGrid .project-row').count(), 28,
-    'Remove windhawk-mods from the public project list');
+  assert.equal(await page.locator('#projectsGrid .project-row').count(), 32);
+  for (const [slug, title] of Object.entries({
+    codepuff: 'CodePuff', voicebuffer: 'VoiceBuffer', 'uninstall-here': 'Uninstall Here', urlforge: 'URLForge'
+  })) {
+    const project = page.locator('#projectsGrid .project-row').filter({
+      has: page.getByText(title, {exact: true})
+    });
+    const gitlab = project.locator('[data-forge="gitlab"]');
+    assert.equal(await gitlab.getAttribute('href'), 'https://gitlab.com/luizbizzio/' + slug);
+    await page.waitForFunction(repo => {
+      const project = window.HubDirectory.projects().find(item => item.repo === repo);
+      return project && window.HubDirectory.forgeLinks(project)
+        .some(link => link.provider === 'gitlab' && link.verified);
+    }, slug);
+  }
+  assert.equal(await page.locator('#projectsGrid .work-name').getByText('Gitmirror',{exact:true}).count(), 0);
   assert.equal(await page.locator('#projectsGrid .work-name').getByText('Windhawk Mods',{exact:true}).count(), 0,
     'Removed project must not come back from cached metadata');
-  assert.equal(await page.locator('#projectsGrid .project-meta').count(), 28,
+  assert.equal(await page.locator('#projectsGrid .project-meta').count(), 32,
     'Every repository displays release and last push date');
-  assert.equal(await page.locator('#projectsGrid .project-updated time').count(), 28,
+  assert.equal(await page.locator('#projectsGrid .project-updated time').count(), 32,
     'Every repository must have a local update date');
-  assert.equal(await page.locator('#projectsGrid .project-row .forge-link').count(), 84,
+  assert.equal(await page.locator('#projectsGrid .project-row .forge-link').count(), 96,
     'Every saved public GitHub project should have three forge icons');
   await page.waitForFunction(() => window.HubDirectory.projects()
     .find(project => project.repo === 'scandeck')?.description ===
@@ -442,7 +460,7 @@ try {
       ?.description === site.description)), 'Website and repository descriptions must match');
   assert.equal(await page.locator('#projectsGrid .media-forges').count(), 0,
     'GitHub project photos must have no floating or overlaid forge logos');
-  assert.equal(await page.locator('#projectsGrid .work-source-row .forge-link').count(), 84,
+  assert.equal(await page.locator('#projectsGrid .work-source-row .forge-link').count(), 96,
     'GitHub, GitLab and Codeberg icons belong below the project photo');
   assert.equal(await page.locator('#projectsGrid .project-row .title-favicon').count(), 0,
     'Repository cards must never display website icons');
@@ -497,15 +515,15 @@ try {
   assert(await page.evaluate(() => window.HubAtlas.debug().selectedFrame.reflectionVisible),
     'The project screenshot must have its subtle floor reflection');
   assert.equal(await page.locator('#atlasCanvas .atlas-fallback').count(), 0,
-    'Switching to 28 projects must not lose WebGL and show a static list');
-  assert.equal(await page.locator('#atlasSelect option').count(), 29,
+    'Switching to 32 projects must not lose WebGL and show a static list');
+  assert.equal(await page.locator('#atlasSelect option').count(), 33,
     'All locally saved public repositories must appear in Showcase');
   assert(await page.locator('#atlasView').evaluate(el =>
     el.getBoundingClientRect().height>=620),
     'The Projects 3D gallery should have the same expanded stage');
-  assert.equal(await page.locator('#atlasPagination .atlas-marker').count(), 28,
+  assert.equal(await page.locator('#atlasPagination .atlas-marker').count(), 32,
     'Projects must expose an indicator for every repository');
-  assert.equal(await page.locator('#atlasPagination button.atlas-marker').count(),28,
+  assert.equal(await page.locator('#atlasPagination button.atlas-marker').count(),32,
     'Desktop repository markers should remain clickable');
   assert(await page.locator('#atlasPagination').isVisible(),
     'Projects must show the same outside pagination as Websites');
@@ -516,7 +534,7 @@ try {
     const stage = document.querySelector('#atlasStage').getBoundingClientRect();
     const markers = [...nav.querySelectorAll('.atlas-marker')]
       .map(marker => marker.getBoundingClientRect());
-    return markers.length === 28 &&
+    return markers.length === 32 &&
       Math.abs((rail.left + rail.right - stage.left - stage.right) / 2) < 2 &&
       markers.every(box =>
         Math.abs(box.top - markers[0].top) < 1 &&
@@ -542,13 +560,13 @@ try {
     '3D view shows project identity and links only once');
   await page.locator('#atlasSelect').selectOption('19');
   assert.equal(await page.locator('#atlasPagination .atlas-marker[aria-current="page"]').getAttribute('data-index'),'19',
-    'The selected project must be highlighted among all 28 stable indicators');
+    'The selected project must be highlighted among all 32 stable indicators');
   await page.waitForFunction(() => document.querySelector('#atlasCanvas')?.dataset.settledIndex === '19',
     null, {timeout: 3500});
-  assert.equal(await page.locator('#atlasSelectedIndex').innerText(), '20 / 28',
+  assert.equal(await page.locator('#atlasSelectedIndex').innerText(), '20 / 32',
     'Inspector should remain synchronized with the centered 3D project');
   assert(await page.evaluate(() => window.HubAtlas.debug().activeTextures <= 14),
-    'Showcase should not retain all 28 project textures in GPU memory');
+    'Showcase should not retain all 32 project textures in GPU memory');
   await page.locator('#atlasSelect').selectOption('0');
   await page.waitForFunction(() => document.querySelector('#atlasCanvas')?.dataset.settledIndex === '0',
     null, {timeout: 3500});
@@ -562,7 +580,7 @@ try {
   assert(await page.locator('#projectsGrid').isVisible());
   const archive = page.locator('#projectsGrid .project-row').filter({hasText: 'Archive Preview'});
   assert.equal(await archive.locator('[data-forge="gitlab"]').getAttribute('href'),
-    'https://gitlab.com/luizbizzio1/archive-preview');
+    'https://gitlab.com/luizbizzio/archive-preview');
   assert.equal(await archive.locator('[data-forge="codeberg"]').getAttribute('href'),
     'https://codeberg.org/luizbizzio/archive-preview');
 
@@ -602,7 +620,7 @@ try {
     'Social header must not cause horizontal overflow');
   assert(await m.locator('#categorySelect').evaluate(node =>
     getComputedStyle(node).height !== '0px'), 'Filters remain usable on mobile');
-  assert.equal(await m.locator('#sitesGrid .site-card').count(), 7);
+  assert.equal(await m.locator('#sitesGrid .site-card').count(), 8);
   assert(await m.locator('#sitesGrid').isVisible(), 'Mobile opens in the photo Grid');
   assert(await m.locator('#atlasView').isHidden());
   await m.locator('#viewAtlas').click();
@@ -653,11 +671,11 @@ try {
   assert.equal(await m.locator('#searchInput').inputValue(), '');
   await m.locator('#viewAtlas').click();
   assert(await m.locator('#atlasView').isVisible(), 'Mobile Atlas must be available');
-  assert.equal(await m.locator('#atlasSelect option').count(), 8);
+  assert.equal(await m.locator('#atlasSelect option').count(), 9);
   await m.locator('#projectsTab').click();
-  assert.equal(await m.locator('#atlasSelect option').count(), 29);
-  assert.equal(await m.locator('#atlasPagination .atlas-marker').count(), 28,
-    'Mobile must show an indicator for each of the 28 repositories');
+  assert.equal(await m.locator('#atlasSelect option').count(), 33);
+  assert.equal(await m.locator('#atlasPagination .atlas-marker').count(), 32,
+    'Mobile must show an indicator for each of the 32 repositories');
   assert.equal(await m.locator('#atlasPagination button').count(),0,
     'Dense mobile dots are feedback, not undersized touch targets');
   assert.equal(await m.locator('#atlasPagination').getAttribute('aria-hidden'),'true',
@@ -703,7 +721,7 @@ try {
   await fallback.goto(origin+'/',{waitUntil:'domcontentloaded'});
   await fallback.locator('#viewAtlas').click();
   await fallback.locator('#atlasCanvas .atlas-fallback-node').first().waitFor({timeout:15000});
-  assert.equal(await fallback.locator('.atlas-fallback-node').count(), 7);
+  assert.equal(await fallback.locator('.atlas-fallback-node').count(), 8);
   await fallback.locator('.atlas-fallback-node').nth(1).click();
   assert.equal(await fallback.locator('#atlasTitle').innerText(),'MyPixel');
   await fallback.close();

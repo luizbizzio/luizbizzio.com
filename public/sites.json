@@ -61,5 +61,14 @@
     "category": "Games",
     "description": "A small browser click game made for fun.",
     "icon": "./icons/capybara.svg"
+  },
+  {
+    "id": "urlforge",
+    "name": "URLForge",
+    "url": "https://uf.do/",
+    "repo": "urlforge",
+    "category": "Tools",
+    "description": "Compress long URLs into self-contained links in your browser.",
+    "icon": "./icons/urlforge.png"
   }
 ]

@@ -5,6 +5,7 @@
     "archive-preview": "./previews/covers/archive-preview.png",
     "BannerlordFG": "./previews/covers/BannerlordFG.png",
     "capybara": "./previews/covers/capybara.jpg",
+    "codepuff": "./previews/covers/codepuff.png",
     "currency-exchange-exporter": "./previews/covers/currency-exchange-exporter.png",
     "emojis": "./previews/covers/emojis.jpg",
     "git-history-reset": "./previews/covers/git-history-reset.jpg",
@@ -27,6 +28,8 @@
     "task-manager-pause-button": "./previews/covers/task-manager-pause-button.png",
     "taskbar-zones": "./previews/covers/taskbar-zones.png",
     "tuya-smart-plug-exporter": "./previews/covers/tuya-smart-plug-exporter.png",
+    "uninstall-here": "./previews/covers/uninstall-here.png",
+    "voicebuffer": "./previews/covers/voicebuffer.png",
     "windhawk-badges": "./previews/covers/windhawk-badges.png",
     "windhawk-inspector": "./previews/covers/windhawk-inspector.png",
     "windows-auto-hotspot": "./previews/covers/windows-auto-hotspot.png"
