@@ -4,7 +4,7 @@
 
 **My developer profile and open-source project index.**
 
-Start with my pinned projects, search the full index, or explore in 3D.
+Search the repository index or see what I released recently.
 
 [**Explore the website**](https://luizbizzio.com) · [**GitHub profile**](https://github.com/luizbizzio)
 
@@ -15,15 +15,6 @@ Start with my pinned projects, search the full index, or explore in 3D.
 ## About the project
 
 This is my personal project index. It brings my websites, tools, experiments, games, and open-source work into one place. Project entries link to GitHub, GitLab, Codeberg, and the live site where available.
-
-## Two ways to explore
-
-| **List** | **3D Gallery** |
-| :--- | :--- |
-| Search project names, descriptions, categories, and source links. | Browse project screenshots in a 3D gallery built with Three.js. |
-| Best for finding a specific project. | Best for exploring projects visually. |
-
-Both views use the same collection. Switch between them without losing your place.
 
 ## Some of my websites
 
@@ -60,7 +51,7 @@ Both views use the same collection. Switch between them without losing your plac
 
 - **Real previews:** website screenshots and locally saved project artwork.
 - **Project details:** descriptions, dates, source links, and more information.
-- **Visual history:** browse older screenshots when captures are available.
+- **Recent releases:** open the latest published versions directly from the profile.
 - **Fast search:** find a website or repository by name.
 - **Command palette:** press `Ctrl + K` or `Cmd + K` for quick navigation.
 - **Filters and sorting:** browse by category, name, or recent updates.
@@ -75,9 +66,9 @@ GitHub Actions helps keep the collection up to date by refreshing project data, 
 
 ## Technology
 
-**HTML · CSS · JavaScript · Three.js · GitHub Actions · Cloudflare Pages**
+**HTML · CSS · JavaScript · GitHub Actions · Cloudflare Pages**
 
-The site is static, with no database or application server. Three.js is bundled with the project, so the 3D gallery does not need an external CDN.
+The site is static and runs without a database or application server.
 
 ---
 

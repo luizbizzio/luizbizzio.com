@@ -40,9 +40,6 @@ jobs:
         run: |
           node --check public/assets/app.js
           node --check public/assets/explorer.js
-          node --check public/assets/atlas.js
-          node --check public/assets/vendor/three.module.js
-          node --check public/assets/vendor/three.core.js
           node --check scripts/capture-previews.mjs
           node --check scripts/cache-project-covers.mjs
           node --check scripts/test-ui.mjs

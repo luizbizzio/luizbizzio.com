@@ -17,13 +17,6 @@
   };
   const FORGE_LABELS = {github: 'GitHub', gitlab: 'GitLab', codeberg: 'Codeberg'};
   const FORGE_OWNERS = {github: OWNER, gitlab: GITLAB_OWNER, codeberg: OWNER};
-  const PINNED = ['codepuff', 'urlforge', 'scandeck', 'windhawk-inspector'];
-  const FEATURED = [
-    'scandeck', 'mypixel', 'windhawk-inspector', 'windhawk-badges',
-    'refreshrate', 'archive-preview', 'taskbar-zones',
-    'task-manager-pause-button', 'recycle-bin-file-preview',
-    'capybara', 'siteguard', 'BannerlordFG'
-  ];
   const KNOWN = [
     ['scandeck', 'Games that live inside QR codes and barcodes.', 'Games'],
     ['mypixel', 'A browser-based pixel art editor and exporter.', 'Tools'],
@@ -80,18 +73,13 @@
   const SELECT = id => document.getElementById(id);
   const UI = {
     sitesTab: SELECT('sitesTab'), projectsTab: SELECT('projectsTab'),
-    viewList: SELECT('viewList'), viewAtlas: SELECT('viewAtlas'), atlas: SELECT('atlasView'),
-    pinnedSection: SELECT('pinnedSection'), pinned: SELECT('pinnedProjects'),
+    releasesSection: SELECT('recentReleases'), releasesList: SELECT('releasesList'),
     sitesCount: SELECT('sitesCount'), projectsCount: SELECT('projectsCount'),
     panel: SELECT('directoryPanel'), projectsList: SELECT('projectsList'), search: SELECT('searchInput'),
     clearSearch: SELECT('clearSearch'),
     emptyMessage: SELECT('emptyMessage'),
     category: SELECT('categorySelect'), sort: SELECT('sortSelect'),
-    empty: SELECT('emptyState'), clear: SELECT('clearButton'),
-    dialog: SELECT('previewDialog'), area: SELECT('previewArea'),
-    previewTitle: SELECT('previewTitle'), previewEyebrow: SELECT('previewEyebrow'),
-    previewDescription: SELECT('previewDescription'), previewLink: SELECT('previewLink'),
-    close: SELECT('closePreview')
+    empty: SELECT('emptyState'), clear: SELECT('clearButton')
   };
   const niceName = name => TITLE[name] || name.replace(/[-_]+/g, ' ').replace(/\b[a-z]/g, c => c.toUpperCase());
   const knownProjects = KNOWN.map(([repo, description, category, archived]) => ({
@@ -100,7 +88,7 @@
   }));
   const state = {
     tab: location.hash === '#sites' ? 'sites' : 'projects',
-    view: 'list', search: '', category: 'All', sort: 'featured',
+    search: '', category: 'All', sort: 'recent',
     sites: [], projects: knownProjects, shown: [], metadata: {}, coverIndex: {}
   };
 
@@ -129,8 +117,7 @@
       (COVER_FILES[item.repo] ? './previews/covers/' + COVER_FILES[item.repo] : '');
     const siteId = site?.id || (WEBSITE_COVERS.has(item.repo) ? item.repo : '');
     const screenshot = validId(siteId) ? './previews/' + siteId + '.jpg' : '';
-    // Repository entries with live websites use locally captured screenshots,
-    // in the pinned cards, detail dialog and Three.js, before any GitHub/README art.
+    // Prefer a local screenshot for the websites curated for screenshots.
     if (item.kind === 'site' || WEBSITE_COVERS.has(item.repo)) {
       if (screenshot) images.push(screenshot);
       if (cached) images.push(cached);
@@ -141,68 +128,9 @@
     return [...new Set(images.filter(safeImage))];
   }
 
-  function dateLabel(value) {
-    if (!value || Number.isNaN(Date.parse(value))) return '';
-    return new Intl.DateTimeFormat('en-GB', {year: 'numeric', month: 'short', day: 'numeric'})
-      .format(new Date(value));
-  }
   function websiteFor(item) {
     return item.kind === 'site' ? item : state.sites.find(site => site.repo === item.repo);
   }
-  function faviconFor(item) {
-    const icon = websiteFor(item)?.icon;
-    return safeIcon(icon) ? icon : '';
-  }
-
-  function previewMarkup(item, index) {
-    const src = imageSources(item);
-    const name = escapeHTML(item.name);
-    // No fake screenshots: image is actual capture / original asset, else a label.
-    const img = src.length
-      ? '<img src="' + escapeHTML(src[0]) + '" data-sources="' +
-        escapeHTML(JSON.stringify(src)) + '" alt="' +
-        escapeHTML('Preview of ' + item.name) + '" loading="' +
-        (index < 2 ? 'eager' : 'lazy') + '" decoding="async"' +
-        (index === 0 ? ' fetchpriority="high"' : '') + '>'
-      : '';
-    return '<div class="preview-window"><div class="preview-placeholder">' +
-      '<strong>' + name + '</strong><span>' +
-      'Project preview' +
-      '</span></div>' + img + '</div>';
-  }
-
-  function wireImages(root) {
-    root.querySelectorAll('img[data-sources]').forEach(img => {
-      const onLoad = () => {
-        const loadedSrc = img.currentSrc || img.src;
-        const reveal = () => {
-          if (!img.isConnected || !img.naturalWidth ||
-              (img.currentSrc || img.src) !== loadedSrc) return;
-          img.classList.add('is-loaded');
-          img.closest('.preview-window')?.classList.add('has-image');
-        };
-        // load means bytes arrived, not that the browser has decoded the pixels.
-        // Decode before exposing the cover to avoid a black frame on first paint.
-        if (typeof img.decode === 'function') img.decode().then(reveal, reveal);
-        else reveal();
-      };
-      img.addEventListener('load', onLoad);
-      if (img.complete && img.naturalWidth > 0) onLoad();
-      img.addEventListener('error', () => {
-        img.classList.remove('is-loaded');
-        img.closest('.preview-window')?.classList.remove('has-image');
-        let images;
-        try { images = JSON.parse(img.dataset.sources); } catch { images = []; }
-        const current = images.indexOf(img.getAttribute('src'));
-        if (current >= 0 && current + 1 < images.length) {
-          img.src = images[current + 1];
-        } else {
-          img.remove();
-        }
-      });
-    });
-  }
-
   function getForgeTargets(item) {
     const repo = validRepo(item.repo) ? item.repo : '';
     if (!repo) return [];
@@ -231,9 +159,13 @@
       links.join('') + '</div>' : '';
   }
 
+  function repositoryName(item) {
+    return item.repo || item.name;
+  }
+
   function projectHeading(item) {
     return '<h3 class="repository-title"><button type="button" data-project="' +
-      escapeHTML(item.repo || item.id) + '">' + escapeHTML(item.name) + '</button></h3>';
+      escapeHTML(item.repo || item.id) + '">' + escapeHTML(repositoryName(item)) + '</button></h3>';
   }
 
   function liveLink(item) {
@@ -243,13 +175,29 @@
       escapeHTML(item.name) + ' website">Visit site <span aria-hidden="true">↗</span></a>' : '';
   }
 
-  function pinnedCard(item, index) {
-    const description = knownProjects.find(project => project.repo === item.repo)?.description || item.description;
-    return '<article class="pinned-project" aria-label="' + escapeHTML(item.name) + '">' +
-      '<div class="pinned-preview">' + previewMarkup(item, index) + '</div>' +
-      '<div class="pinned-content"><div class="pinned-title">' + projectHeading(item) + liveLink(item) + '</div>' +
-      '<p class="repository-description">' + escapeHTML(description) + '</p>' +
-      forgeMarkup(item) + '</div></article>';
+  const releaseDateFormat = new Intl.DateTimeFormat('en-GB', {
+    day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC'
+  });
+
+  function renderReleases() {
+    const releases = state.projects
+      .filter(item => item.release && Number.isFinite(Date.parse(item.releasePublishedAt)))
+      .sort((a, b) => Date.parse(b.releasePublishedAt) - Date.parse(a.releasePublishedAt) ||
+        repositoryName(a).localeCompare(repositoryName(b)))
+      .slice(0, 3);
+
+    UI.releasesSection.hidden = !releases.length;
+    UI.releasesList.innerHTML = releases.map(item => {
+      const tag = item.release;
+      const href = item.url + '/releases/tag/' + encodeURIComponent(tag);
+      const date = item.releasePublishedAt;
+      return '<li><a class="release-link" href="' + escapeHTML(href) +
+        '" target="_blank" rel="noopener noreferrer"><span class="release-repo">' +
+        escapeHTML(repositoryName(item)) + '</span><span class="release-meta"><span class="release-tag">' +
+        escapeHTML(tag) + '</span><time datetime="' + escapeHTML(date) + '">' +
+        escapeHTML(releaseDateFormat.format(new Date(date))) + '</time></span>' +
+        '<span class="release-external" aria-hidden="true">↗</span></a></li>';
+    }).join('');
   }
 
   function repositoryRow(item) {
@@ -263,45 +211,18 @@
       '</div></div>' + forgeMarkup(item) + '</article>';
   }
 
-  let pinnedMarkup = '';
   let listMarkup = '';
-  function renderCollections(atlasMode) {
-    const pinned = PINNED.map(slug => state.projects.find(item => item.repo === slug)).filter(Boolean);
-    UI.pinnedSection.hidden = atlasMode || !pinned.length;
-    if (!atlasMode) {
-      const nextPinned = pinned.map(pinnedCard).join('');
-      if (nextPinned !== pinnedMarkup) {
-        pinnedMarkup = nextPinned;
-        UI.pinned.innerHTML = pinnedMarkup;
-        wireImages(UI.pinned);
-      }
-      const nextList = state.shown.map(repositoryRow).join('');
-      if (nextList !== listMarkup) {
-        listMarkup = nextList;
-        UI.projectsList.innerHTML = listMarkup;
-      }
-    }
-    UI.projectsList.hidden = atlasMode || !state.shown.length;
-  }
-
   function sortedFiltered(items) {
     const q = state.search.trim().toLocaleLowerCase();
     return items.filter(item =>
       (state.category === 'All' || state.category === item.category) &&
       (!q || [item.name,item.description,item.category,item.repo,item.url,websiteFor(item)?.url]
         .some(v => String(v ?? '').toLocaleLowerCase().includes(q))))
-      .sort((a,b) => {
-        if (state.sort === 'name') return a.name.localeCompare(b.name);
-        if (state.sort === 'recent') {
-          return (b.updated || '').localeCompare(a.updated || '') ||
-            a.name.localeCompare(b.name);
-        }
-        if (!!a.archived !== !!b.archived) return a.archived ? 1 : -1;
-        const aPos = a.kind === 'site' ? state.sites.indexOf(a) :
-          FEATURED.includes(a.repo) ? FEATURED.indexOf(a.repo) : 1000;
-        const bPos = b.kind === 'site' ? state.sites.indexOf(b) :
-          FEATURED.includes(b.repo) ? FEATURED.indexOf(b.repo) : 1000;
-        return aPos - bPos || a.name.localeCompare(b.name);
+      .sort((a, b) => {
+        const byName = repositoryName(a).localeCompare(repositoryName(b));
+        return state.sort === 'recent'
+          ? (b.updated || '').localeCompare(a.updated || '') || byName
+          : byName;
       });
   }
 
@@ -331,30 +252,19 @@
       ? 'No matches for “' + state.search.trim() + '”.'
       : 'No matching ' + (websites ? 'websites' : 'projects') + '.';
     UI.search.setAttribute('aria-label', websites ? 'Search websites' : 'Search projects');
-    UI.search.placeholder = websites ? 'Find a website…' : 'Find a project…';
-    const atlasMode = state.view === 'showcase';
-    document.body.classList.toggle('atlas-active', atlasMode);
+    UI.search.placeholder = websites ? 'Find a website…' : 'Find a repository…';
     UI.empty.hidden = state.shown.length !== 0;
-    UI.viewList.classList.toggle('active', !atlasMode);
-    UI.viewAtlas.classList.toggle('active', atlasMode);
-    UI.viewList.setAttribute('aria-pressed', String(!atlasMode));
-    UI.viewAtlas.setAttribute('aria-pressed', String(atlasMode));
-    UI.atlas.hidden = !atlasMode || state.shown.length === 0;
-    renderCollections(atlasMode);
-    window.HubAtlas?.update({
-      items: state.shown, tab: state.tab, active: atlasMode && state.shown.length > 0
-    });
-  }
-
-  function setView(view) {
-    if (view !== 'list' && view !== 'showcase') return;
-    state.view = view;
-    render();
+    UI.projectsList.hidden = state.shown.length === 0;
+    const nextList = state.shown.map(repositoryRow).join('');
+    if (nextList !== listMarkup) {
+      listMarkup = nextList;
+      UI.projectsList.innerHTML = listMarkup;
+    }
   }
 
   function setTab(tab, replaceHash = true) {
     if (!['sites','projects'].includes(tab)) return;
-    if (tab !== state.tab) { state.category = 'All'; state.sort = 'featured'; }
+    if (tab !== state.tab) state.category = 'All';
     state.tab = tab;
     if (replaceHash) history.replaceState(null, '', '#' + tab);
     render();
@@ -362,7 +272,7 @@
   function clearFilters() {
     state.search = '';
     state.category = 'All';
-    state.sort = 'featured';
+    state.sort = 'recent';
     UI.search.value = '';
     render();
   }
@@ -376,10 +286,10 @@
     window.HubExplorer?.open(item);
   }
 
-  function handlePreview(event, items) {
+  function handlePreview(event) {
     const button = event.target.closest('[data-project]');
     if (!button) return;
-    const project = items.find(item => (item.repo || item.id) === button.dataset.project);
+    const project = state.shown.find(item => (item.repo || item.id) === button.dataset.project);
     if (project) openPreview(project);
   }
   async function loadVerifiedForges() {
@@ -469,6 +379,7 @@
       }
       mapped.delete('windhawk-mods');
       state.projects = [...mapped.values()].map(hydrateProject);
+      renderReleases();
       render();
       window.HubExplorer?.refresh();
     } catch (error) {
@@ -491,7 +402,7 @@
         description: String(x.description || ''),
         created: state.metadata[x.repo]?.created || x.created || '',
         updated: state.metadata[x.repo]?.updated || x.updated || ''
-      }));
+      })).map(hydrateProject);
       state.projects = state.projects.map(hydrateProject);
       render();
       window.HubExplorer?.refresh();
@@ -513,8 +424,6 @@
       (to === 'sites' ? UI.sitesTab : UI.projectsTab).focus();
     });
   }
-  UI.viewList.addEventListener('click', () => setView('list'));
-  UI.viewAtlas.addEventListener('click', () => setView('showcase'));
   window.addEventListener('hashchange', () =>
     setTab(location.hash === '#sites' ? 'sites' : 'projects', false));
   UI.search.addEventListener('input', e => { state.search = e.target.value; render(); });
@@ -524,11 +433,7 @@
     } else if (event.key === 'Enter' && state.shown.length) {
       event.preventDefault();
       if (state.shown.length === 1) openPreview(state.shown[0]);
-      else {
-        const target = state.view === 'showcase'
-          ? SELECT('atlasSelect') : UI.projectsList.querySelector('[data-project]');
-        target?.focus({preventScroll: false});
-      }
+      else UI.projectsList.querySelector('[data-project]')?.focus();
     }
   });
   document.addEventListener('keydown', event => {
@@ -539,8 +444,7 @@
   });
   UI.category.addEventListener('change', e => { state.category = e.target.value; render(); });
   UI.sort.addEventListener('change', e => { state.sort = e.target.value; render(); });
-  UI.pinned.addEventListener('click', event => handlePreview(event, state.projects));
-  UI.projectsList.addEventListener('click', event => handlePreview(event, state.shown));
+  UI.projectsList.addEventListener('click', handlePreview);
   UI.clear.addEventListener('click', () => { clearFilters(); UI.search.focus(); });
   UI.clearSearch.addEventListener('click', clearSearch);
   // The detail dialog is owned by explorer.js (including its keyboard controls).
@@ -548,24 +452,9 @@
     sites: () => state.sites,
     projects: () => state.projects,
     images: imageSources,
-    // Default, unfiltered ordering for warm Three.js scenes. No public API call.
-    catalog: tab => {
-      const list=(tab==='sites'?state.sites:state.projects).slice();
-      return list.sort((a,b)=>{
-        if(!!a.archived!==!!b.archived)return a.archived?1:-1;
-        const position=item=>tab==='sites'
-          ? state.sites.indexOf(item)
-          : FEATURED.includes(item.repo)?FEATURED.indexOf(item.repo):1000;
-        return position(a)-position(b)||a.name.localeCompare(b.name);
-      });
-    },
-    favicon: faviconFor,
     website: websiteFor,
-    date: dateLabel,
     forges: forgeMarkup,
     forgeLinks: getForgeTargets,
-    current: () => ({items: state.shown, tab: state.tab, active: state.view === 'showcase'}),
-    view: setView,
     navigate: (tab, sort) => {
       setTab(tab);
       if (sort) { state.sort = sort; render(); }
@@ -620,11 +509,8 @@
   document.documentElement.removeAttribute('data-theme');
   try { localStorage.removeItem('lb-hub-theme'); } catch {}
   render();
-  // Pre-warm both scene roots after their local data and image catalogue load.
-  // This runs while the list is visible, so changing tabs never restarts WebGL.
-  void Promise.allSettled([
-    loadProjectMetadata(),loadSites(),loadCoverIndex()
-  ]).then(()=>window.HubAtlas?.prepare());
-
+  void loadProjectMetadata();
+  void loadSites();
+  void loadCoverIndex();
   void loadVerifiedForges();
 })();

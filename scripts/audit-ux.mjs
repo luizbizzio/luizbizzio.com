@@ -41,38 +41,21 @@ try {
     await page.waitForFunction(()=>window.HubDirectory?.sites()?.length===8 &&
       window.HubDirectory?.projects()?.length===32);
     await page.addScriptTag({content:axe.source});
-    const scenarios=[
-      {tab:'projects',view:'list'},{tab:'sites',view:'list'},
-      {tab:'sites',view:'showcase'},{tab:'projects',view:'showcase'}
-    ];
-    for(const scenario of scenarios) {
-      await page.locator('#'+(scenario.tab==='sites'?'sitesTab':'projectsTab')).click();
-      await page.locator('#'+(scenario.view==='list'?'viewList':'viewAtlas')).click();
-      if(scenario.view==='showcase') {
-        await page.locator('#atlasCanvas canvas.atlas-webgl')
-          .waitFor({state:'visible',timeout:15000});
-        await page.waitForFunction(()=>window.HubAtlas.debug().hasTexture,
-          null,{timeout:12000}).catch(()=>{});
-      } else {
-        await page.locator('#projectsList .repository-entry').first().waitFor({state:'visible'});
-        await page.waitForFunction(() => {
-          const images=[...document.querySelectorAll('#pinnedProjects img[data-sources]')].slice(0,2);
-          return images.length>0 && images.every(img =>
-            img.complete && img.naturalWidth>0 && img.classList.contains('is-loaded'));
-        },null,{timeout:15000});
-      }
+    for (const tab of ['projects', 'sites']) {
+      await page.locator(tab === 'sites' ? '#sitesTab' : '#projectsTab').click();
+      await page.locator('#projectsList .repository-entry').first().waitFor({state:'visible'});
+      await page.locator('#recentReleases').waitFor({state:'visible'});
       await page.evaluate(() => window.scrollTo({top:0,behavior:'instant'}));
-      const screenshotPath = fileURLToPath(new URL(size.name+'-'+scenario.tab+'-'+scenario.view+'.png',output));
+      const screenshotPath = fileURLToPath(new URL(size.name + '-' + tab + '-list.png',output));
       await page.screenshot({path:screenshotPath,animations:'disabled',timeout:15000,fullPage:false});
       const metrics=await page.evaluate(()=>{
         const nodes=[...document.querySelectorAll(
-          '.pinned-project,.repository-entry')].filter(el=>el.getClientRects().length);
+          '.repository-entry')].filter(el=>el.getClientRects().length);
         const clipped=nodes.filter(el=>{
           const last=el.querySelector('.repository-sources');
           if(!last)return false;
           return last.getBoundingClientRect().bottom > el.getBoundingClientRect().bottom + 2;
         }).length;
-        const markers=[...document.querySelectorAll('#atlasPagination .atlas-marker')];
         const smallControls=[...document.querySelectorAll('a.source-link')]
           .filter(el=>el.getClientRects().length).filter(el=>{
             const box=el.getBoundingClientRect();return box.width<24||box.height<24;
@@ -83,8 +66,6 @@ try {
           scrollHeight:document.documentElement.scrollHeight,
           clippedCardFooters:clipped,
           undersizedForgeLinks:smallControls,
-          visibleMarkers:markers.filter(el=>el.getClientRects().length).length,
-          textureCount:window.HubAtlas.debug?.().activeTextures??null,
           cardCount:nodes.length
         };
       });
@@ -97,7 +78,7 @@ try {
           examples:v.nodes.slice(0,3).map(n=>n.target.join(' '))
         }));
       });
-      const record={...size,scenario:scenario.tab+'-'+scenario.view,metrics,
+      const record={...size,scenario:tab,metrics,
         accessibility,errors:[...errors]};
       results.push(record);
       const severe=accessibility.filter(v=>v.impact==='critical'||v.impact==='serious');
@@ -105,8 +86,6 @@ try {
         'overflow='+Math.max(0,metrics.scrollWidth-metrics.viewportWidth),
         'clipped='+metrics.clippedCardFooters,
         'smallLinks='+metrics.undersizedForgeLinks,
-        'verticalScroll='+(scenario.view==='showcase'?
-          Math.max(0,metrics.scrollHeight-size.height):'n/a'),
         'severe='+severe.map(v=>v.id+'('+v.affected+')').join(','));
     }
     await page.close();
@@ -118,9 +97,6 @@ try {
   server.kill('SIGTERM');
 }
 const failures=results.filter(r=>r.metrics.scrollWidth>r.metrics.viewportWidth+2 ||
-  // The expanded 3D and larger typography allow natural vertical scroll.
-  (r.scenario.endsWith('-showcase') &&
-    r.metrics.scrollHeight>r.height+440) ||
   r.metrics.clippedCardFooters>0 || r.metrics.undersizedForgeLinks>0 || r.errors.length ||
   r.accessibility.some(v=>v.impact==='critical'||v.impact==='serious'));
 if(failures.length) {
