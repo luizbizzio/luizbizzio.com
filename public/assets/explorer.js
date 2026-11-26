@@ -35,8 +35,9 @@
   };
   const projectFor = item =>
     (directory()?.projects() || []).find(project => project.repo === item.repo);
-  const siteFor = item => item.kind === 'site' ? item :
-    (directory()?.sites() || []).find(site => site.repo === item.repo);
+  const siteFor = item => directory()?.website(item);
+  const forgeFor = (item, provider) => directory()?.forgeLinks(item)
+    .find(link => link.provider === provider && link.verified);
   const imageSources = item => directory()?.images(item) || [];
 
   function showImage(item) {
@@ -72,7 +73,7 @@
     const site = siteFor(item);
     const repo = projectFor(item);
     state.active = item;
-    const website = item.kind === 'site';
+    const website = Boolean(site);
 
     ui.title.textContent = item.name;
     ui.icon.hidden = !(website && site?.icon && URL_SAFE(site.icon));
@@ -82,10 +83,10 @@
     } else {
       ui.icon.removeAttribute('src');
     }
-    ui.eyebrow.textContent = website ? 'WEBSITE / SOURCE' : 'GITHUB PROJECT';
+    ui.eyebrow.textContent = website ? 'WEBSITE' : 'OPEN SOURCE';
     ui.description.textContent = item.description || 'Open-source project';
     ui.category.textContent = item.category || 'Project';
-    ui.platform.textContent = website ? 'Web browser' : 'GitHub repository';
+    ui.platform.textContent = website ? 'Web browser' : 'Source repository';
     ui.status.textContent = repo?.archived ? 'Archived' : (repo || item.kind === 'repo' ? 'Public' : 'Not linked');
     ui.created.textContent = prettyDate(repo?.created || item.created) || 'Not available';
     ui.updated.textContent = prettyDate(repo?.updated || item.updated) || 'Not available';
@@ -97,14 +98,6 @@
     if (site?.url && URL_SAFE(site.url)) links.push(
       '<a href="' + e(site.url) + '" target="_blank" rel="noopener noreferrer" class="detail-primary">' +
       'Visit website <span aria-hidden="true">↗</span></a>'
-    );
-    if (repo?.url && URL_SAFE(repo.url)) links.push(
-      '<a href="' + e(repo.url) + '" target="_blank" rel="noopener noreferrer" class="detail-secondary">' +
-      'View source on GitHub <span aria-hidden="true">↗</span></a>'
-    );
-    if (!repo && item.kind === 'repo' && URL_SAFE(item.url)) links.push(
-      '<a href="' + e(item.url) + '" target="_blank" rel="noopener noreferrer" class="detail-secondary">' +
-      'View on GitHub <span aria-hidden="true">↗</span></a>'
     );
     ui.links.innerHTML = links.join('') +
       '<div class="detail-forges">' + (directory()?.forges(item) || '') + '</div>';
@@ -137,22 +130,20 @@
     const needle = forge ? text.slice(forgeCommand[0].length).trim() : text;
     const all = unifiedItems();
     const repoOnly = (directory()?.projects() || []);
-    const entries = (forge ? repoOnly : all)
+    const entries = (forge ? repoOnly.filter(item => forgeFor(item, forge)) : all)
       .filter(item => !needle || [item.name, item.repo, item.category, item.description]
         .some(v => String(v || '').toLocaleLowerCase().includes(needle)))
       .slice(0, 12)
       .map(item => ({
         kind: forge || 'project',
         title: item.name,
-        detail: forge ?
-          ('Open ' + forge[0].toUpperCase() + forge.slice(1) +
-            (forge === 'github' ? ' repository' : ' path (not verified)')) :
-          (item.kind === 'site' ? 'Website + source' : 'GitHub project'),
+        detail: forge ? ('Open ' + forgeFor(item, forge).label + ' repository') :
+          (siteFor(item) ? 'Website and source' : 'Source repository'),
         item
       }));
 
     const actions = [
-      {kind: 'recent', title: 'Recent projects', detail: 'Sort GitHub repositories by last update'},
+      {kind: 'recent', title: 'Recent projects', detail: 'Sort projects by last update'},
       {kind: 'random', title: 'Random project', detail: 'Explore a random project'}
     ].filter(x => !needle || (x.title + ' ' + x.detail).toLowerCase().includes(needle));
     if (forge) return entries;
@@ -189,7 +180,7 @@
     if (choice.kind === 'recent') recent();
     else if (choice.kind === 'random') random();
     else if (['github', 'gitlab', 'codeberg'].includes(choice.kind)) {
-      const target = directory()?.forgeLinks(choice.item)?.find(link => link.provider === choice.kind);
+      const target = forgeFor(choice.item, choice.kind);
       if (target && URL_SAFE(target.url)) {
         window.open(target.url, '_blank', 'noopener,noreferrer');
         ui.command.close();
@@ -258,9 +249,9 @@
     open, showPalette,
     refresh() {
       if (ui.preview.open && state.active) {
-        const site = siteFor(state.active);
         const project = projectFor(state.active);
-        if (site || project) open(site || project);
+        const item = state.active.kind === 'site' ? siteFor(state.active) : project;
+        if (item) open(item);
       }
       if (ui.command.open) renderPalette();
     }

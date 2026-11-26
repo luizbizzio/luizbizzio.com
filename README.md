@@ -2,9 +2,9 @@
 
 # Luiz Bizzio
 
-**A visual index of my websites and open-source projects.**
+**My developer profile and open-source project index.**
 
-Browse real work in a clean grid or explore it in an interactive 3D gallery.
+Start with my pinned projects, search the full index, or explore in 3D.
 
 [**Explore the website**](https://luizbizzio.com) · [**GitHub profile**](https://github.com/luizbizzio)
 
@@ -14,15 +14,13 @@ Browse real work in a clean grid or explore it in an interactive 3D gallery.
 
 ## About the project
 
-This is my personal project index. It brings my websites, tools, experiments, games, and open-source work into one place.
-
-Instead of a long list of links, each project has its own visual preview, description, details, and direct links. The goal is simple: make it easy to discover what I have built.
+This is my personal project index. It brings my websites, tools, experiments, games, and open-source work into one place. Project entries link to GitHub, GitLab, Codeberg, and the live site where available.
 
 ## Two ways to explore
 
-| **Grid** | **3D Gallery** |
+| **List** | **3D Gallery** |
 | :--- | :--- |
-| Browse clear cards with real screenshots, project names, and details. | Move through a smooth 3D gallery built with Three.js. |
+| Search project names, descriptions, categories, and source links. | Browse project screenshots in a 3D gallery built with Three.js. |
 | Best for finding a specific project. | Best for exploring projects visually. |
 
 Both views use the same collection. Switch between them without losing your place.

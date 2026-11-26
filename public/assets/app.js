@@ -15,7 +15,9 @@
     gitlab: 'https://gitlab.com/',
     codeberg: 'https://codeberg.org/'
   };
+  const FORGE_LABELS = {github: 'GitHub', gitlab: 'GitLab', codeberg: 'Codeberg'};
   const FORGE_OWNERS = {github: OWNER, gitlab: GITLAB_OWNER, codeberg: OWNER};
+  const PINNED = ['codepuff', 'urlforge', 'scandeck', 'windhawk-inspector'];
   const FEATURED = [
     'scandeck', 'mypixel', 'windhawk-inspector', 'windhawk-badges',
     'refreshrate', 'archive-preview', 'taskbar-zones',
@@ -78,10 +80,10 @@
   const SELECT = id => document.getElementById(id);
   const UI = {
     sitesTab: SELECT('sitesTab'), projectsTab: SELECT('projectsTab'),
-    viewGrid: SELECT('viewGrid'), viewAtlas: SELECT('viewAtlas'), atlas: SELECT('atlasView'),
+    viewList: SELECT('viewList'), viewAtlas: SELECT('viewAtlas'), atlas: SELECT('atlasView'),
+    pinnedSection: SELECT('pinnedSection'), pinned: SELECT('pinnedProjects'),
     sitesCount: SELECT('sitesCount'), projectsCount: SELECT('projectsCount'),
-    panel: SELECT('directoryPanel'), sitesGrid: SELECT('sitesGrid'),
-    projectsGrid: SELECT('projectsGrid'), search: SELECT('searchInput'),
+    panel: SELECT('directoryPanel'), projectsList: SELECT('projectsList'), search: SELECT('searchInput'),
     clearSearch: SELECT('clearSearch'),
     emptyMessage: SELECT('emptyMessage'),
     category: SELECT('categorySelect'), sort: SELECT('sortSelect'),
@@ -92,14 +94,13 @@
     close: SELECT('closePreview')
   };
   const niceName = name => TITLE[name] || name.replace(/[-_]+/g, ' ').replace(/\b[a-z]/g, c => c.toUpperCase());
-  const knownRepo = name => KNOWN.find(x => x[0] === name);
   const knownProjects = KNOWN.map(([repo, description, category, archived]) => ({
     kind: 'repo', repo, name: niceName(repo), description, category,
     archived: !!archived, created: '', updated: '', url: GH + encodeURIComponent(repo)
   }));
   const state = {
-    tab: location.hash === '#projects' ? 'projects' : 'sites',
-    view: 'grid', search: '', category: 'All', sort: 'featured',
+    tab: location.hash === '#sites' ? 'sites' : 'projects',
+    view: 'list', search: '', category: 'All', sort: 'featured',
     sites: [], projects: knownProjects, shown: [], metadata: {}, coverIndex: {}
   };
 
@@ -123,13 +124,13 @@
   const WEBSITE_COVERS = new Set(['scandeck','windhawk-badges','windhawk-inspector','siteguard','urlforge']);
   function imageSources(item) {
     const images = [];
-    const site = item.kind === 'site' ? item : state.sites.find(s => s.repo === item.repo);
+    const site = websiteFor(item);
     const cached = state.coverIndex[item.repo] ||
       (COVER_FILES[item.repo] ? './previews/covers/' + COVER_FILES[item.repo] : '');
     const siteId = site?.id || (WEBSITE_COVERS.has(item.repo) ? item.repo : '');
     const screenshot = validId(siteId) ? './previews/' + siteId + '.jpg' : '';
     // Repository entries with live websites use locally captured screenshots,
-    // in Grid, detail dialog and Three.js, before any GitHub/README art.
+    // in the pinned cards, detail dialog and Three.js, before any GitHub/README art.
     if (item.kind === 'site' || WEBSITE_COVERS.has(item.repo)) {
       if (screenshot) images.push(screenshot);
       if (cached) images.push(cached);
@@ -145,16 +146,12 @@
     return new Intl.DateTimeFormat('en-GB', {year: 'numeric', month: 'short', day: 'numeric'})
       .format(new Date(value));
   }
-  function dateMarkup(item) {
-    const created = dateLabel(item.created);
-    const updated = dateLabel(item.updated);
-    return '<div class="card-dates">' +
-      '<span>Created <strong>' + escapeHTML(created || '—') + '</strong></span>' +
-      '<span>Updated <strong>' + escapeHTML(updated || '—') + '</strong></span></div>';
+  function websiteFor(item) {
+    return item.kind === 'site' ? item : state.sites.find(site => site.repo === item.repo);
   }
   function faviconFor(item) {
-    // Repository previews show the three source-forge symbols, never a website favicon.
-    return item.kind === 'site' && safeIcon(item.icon) ? item.icon : '';
+    const icon = websiteFor(item)?.icon;
+    return safeIcon(icon) ? icon : '';
   }
 
   function previewMarkup(item, index) {
@@ -170,14 +167,11 @@
       : '';
     return '<div class="preview-window"><div class="preview-placeholder">' +
       '<strong>' + name + '</strong><span>' +
-      (item.kind === 'site' ? 'Website' : 'GitHub project') +
+      'Project preview' +
       '</span></div>' + img + '</div>';
   }
 
   function wireImages(root) {
-    root.querySelectorAll('img[data-icon]').forEach(img => {
-      img.addEventListener('error', () => img.remove(), {once: true});
-    });
     root.querySelectorAll('img[data-sources]').forEach(img => {
       const onLoad = () => {
         const loadedSrc = img.currentSrc || img.src;
@@ -210,7 +204,7 @@
   }
 
   function getForgeTargets(item) {
-    const repo = validRepo(item.repo) ? item.repo : validId(item.id) ? item.id : '';
+    const repo = validRepo(item.repo) ? item.repo : '';
     if (!repo) return [];
     return ['github', 'gitlab', 'codeberg'].map(provider => {
       const override = VERIFIED_MIRRORS[provider]?.[repo];
@@ -220,83 +214,85 @@
       const url = verified && override
         ? override
         : FORGE_HOSTS[provider] + FORGE_OWNERS[provider] + '/' + encodeURIComponent(repo);
-      return {provider, url, verified, repo};
+      return {provider, label: FORGE_LABELS[provider], url, verified, repo};
     });
   }
 
   function forgeMarkup(item) {
-    const entries = getForgeTargets(item);
-    if (!entries.length) return '';
-    const slug = entries[0].repo;
-    const links = entries.map(({provider, url}) => {
-      const label = provider === 'github' ? 'GitHub' : provider === 'gitlab' ? 'GitLab' : 'Codeberg';
-      return '<a class="forge-link" data-forge="' + provider +
-        '" href="' + escapeHTML(url) + '" target="_blank" rel="noopener noreferrer"' +
-        ' title="' + label + '" aria-label="Open ' + label + ' for ' + escapeHTML(slug) + '">' +
-        '<span class="forge-symbol forge-' + provider + '" aria-hidden="true"></span>' +
-        '</a>';
-    }).join('');
-    return '<div class="forge-strip" role="group" aria-label="Repository hosting for ' +
-      escapeHTML(slug) + '">' +
-      '<span class="forge-identity" title="' + escapeHTML(OWNER + '/' + slug) +
-      '"><span class="forge-identity-prefix">SOURCE / </span>' +
-      escapeHTML(OWNER + '/' + slug) + '</span>' +
-      '<div class="forge-actions">' + links + '</div></div>';
+    const links = getForgeTargets(item).map(({provider, label, url, verified}) => {
+      const icon = '<span class="forge-symbol forge-' + provider + '" aria-hidden="true"></span>';
+      if (!verified) return '<span class="source-link source-unavailable" title="' +
+        label + ' mirror unavailable">' + icon + label + '<span class="sr-only"> mirror unavailable</span></span>';
+      return '<a class="source-link" data-forge="' + provider + '" href="' + escapeHTML(url) +
+        '" target="_blank" rel="noopener noreferrer" aria-label="' + label + ' for ' +
+        escapeHTML(item.name) + '">' + icon + label + '</a>';
+    });
+    return links.length ? '<div class="repository-sources" role="group" aria-label="Source repositories">' +
+      links.join('') + '</div>' : '';
   }
 
-  function card(item, index) {
-    const site = item.kind === 'site';
-    const name = escapeHTML(item.name), url = escapeHTML(item.url);
-    const previewClass = site ? 'preview-button' : 'project-preview';
-    const titleClass = site ? 'site-title-button' : 'project-title';
-    const icon = site && safeIcon(item.icon)
-      ? '<img class="title-favicon" data-icon alt="" src="' + escapeHTML(item.icon) +
-        '" loading="lazy" decoding="async">'
-      : '';
-    const tag = typeof item.release === 'string' && item.release.trim()
-      ? item.release.trim()
-      : (item.releaseChecked ? 'No release' : 'Release unavailable');
-    const updated = dateLabel(item.updated) || 'Unknown';
-    const metadata = site ? '' :
-      '<div class="project-meta"><span class="project-release" title="Latest GitHub release">' +
-        escapeHTML(tag) + '</span><span class="project-meta-dot" aria-hidden="true">·</span>' +
-        '<span class="project-updated">Updated <time' +
-        (item.updated && !Number.isNaN(Date.parse(item.updated)) ?
-          ' datetime="' + escapeHTML(item.updated) + '"' : '') +
-        '>' + escapeHTML(updated) + '</time></span></div>';
-    const links = site
-      ? '<a class="work-visit" href="' + url +
-          '" target="_blank" rel="noopener noreferrer" aria-label="Visit ' +
-          name + '">Visit <span aria-hidden="true">↗</span></a>'
-      : '<div class="work-source-row">' + forgeMarkup(item) + '</div>';
-    return '<article class="work-card ' + (site ? 'site-card' : 'project-row') +
-      '" aria-label="' + name + '">' +
-      '<div class="work-media"><button class="' + previewClass +
-        '" type="button" data-open="' + index +
-        '" aria-label="Details for ' + name + '">' + previewMarkup(item, index) +
-        '</button></div>' +
-      '<div class="work-content ' + (site ? 'site-details' : 'project-data') + '">' +
-        '<h2 class="work-name"><button type="button" data-open="' + index +
-          '" class="' + titleClass + '">' + icon +
-          '<span class="work-title-text">' + name + '</span></button></h2>' +
-        '<p class="work-description ' + (site ? 'site-description' : 'project-description') +
-          '">' + escapeHTML(item.description) + '</p>' +
-        metadata +
-        '<div class="work-actions">' + links + '</div>' +
-      '</div></article>';
+  function projectHeading(item) {
+    return '<h3 class="repository-title"><button type="button" data-project="' +
+      escapeHTML(item.repo || item.id) + '">' + escapeHTML(item.name) + '</button></h3>';
   }
-  const sitesCard = card;
-  const repoRow = card;
+
+  function liveLink(item) {
+    const site = websiteFor(item);
+    return site ? '<a class="repository-visit" href="' + escapeHTML(site.url) +
+      '" target="_blank" rel="noopener noreferrer" aria-label="Visit ' +
+      escapeHTML(item.name) + ' website">Visit site <span aria-hidden="true">↗</span></a>' : '';
+  }
+
+  function pinnedCard(item, index) {
+    const description = knownProjects.find(project => project.repo === item.repo)?.description || item.description;
+    return '<article class="pinned-project" aria-label="' + escapeHTML(item.name) + '">' +
+      '<div class="pinned-preview">' + previewMarkup(item, index) + '</div>' +
+      '<div class="pinned-content"><div class="pinned-title">' + projectHeading(item) + liveLink(item) + '</div>' +
+      '<p class="repository-description">' + escapeHTML(description) + '</p>' +
+      forgeMarkup(item) + '</div></article>';
+  }
+
+  function repositoryRow(item) {
+    const status = item.archived ? 'Archived' : item.release;
+    return '<article class="repository-entry" aria-label="' + escapeHTML(item.name) + '">' +
+      '<div class="repository-info"><div class="repository-heading">' + projectHeading(item) +
+      '<span class="repository-category">' + escapeHTML(item.category) + '</span></div>' +
+      '<p class="repository-description">' + escapeHTML(item.description) + '</p>' +
+      '<div class="repository-meta">' + liveLink(item) +
+      (status ? '<span class="repository-version">' + escapeHTML(status) + '</span>' : '') +
+      '</div></div>' + forgeMarkup(item) + '</article>';
+  }
+
+  let pinnedMarkup = '';
+  let listMarkup = '';
+  function renderCollections(atlasMode) {
+    const pinned = PINNED.map(slug => state.projects.find(item => item.repo === slug)).filter(Boolean);
+    UI.pinnedSection.hidden = atlasMode || !pinned.length;
+    if (!atlasMode) {
+      const nextPinned = pinned.map(pinnedCard).join('');
+      if (nextPinned !== pinnedMarkup) {
+        pinnedMarkup = nextPinned;
+        UI.pinned.innerHTML = pinnedMarkup;
+        wireImages(UI.pinned);
+      }
+      const nextList = state.shown.map(repositoryRow).join('');
+      if (nextList !== listMarkup) {
+        listMarkup = nextList;
+        UI.projectsList.innerHTML = listMarkup;
+      }
+    }
+    UI.projectsList.hidden = atlasMode || !state.shown.length;
+  }
 
   function sortedFiltered(items) {
     const q = state.search.trim().toLocaleLowerCase();
     return items.filter(item =>
       (state.category === 'All' || state.category === item.category) &&
-      (!q || [item.name,item.description,item.category,item.repo,item.url]
+      (!q || [item.name,item.description,item.category,item.repo,item.url,websiteFor(item)?.url]
         .some(v => String(v ?? '').toLocaleLowerCase().includes(q))))
       .sort((a,b) => {
         if (state.sort === 'name') return a.name.localeCompare(b.name);
-        if (state.sort === 'recent' && state.tab === 'projects') {
+        if (state.sort === 'recent') {
           return (b.updated || '').localeCompare(a.updated || '') ||
             a.name.localeCompare(b.name);
         }
@@ -318,10 +314,6 @@
       '<option value="' + escapeHTML(c) + '">' +
       escapeHTML(c === 'All' ? 'All categories' : c) + '</option>').join('');
     UI.category.value = state.category;
-    const recent = UI.sort.querySelector('[value="recent"]');
-    recent.hidden = websites;
-    recent.disabled = websites;
-    if (websites && state.sort === 'recent') state.sort = 'featured';
     UI.sort.value = state.sort;
     state.shown = sortedFiltered(items);
 
@@ -332,42 +324,31 @@
     UI.sitesTab.tabIndex = websites ? 0 : -1;
     UI.projectsTab.tabIndex = websites ? -1 : 0;
     UI.panel.setAttribute('aria-labelledby', websites ? 'sitesTab' : 'projectsTab');
-    UI.sitesCount.textContent = String(state.sites.length).padStart(2,'0');
-    UI.projectsCount.textContent = String(state.projects.length).padStart(2,'0');
+    UI.sitesCount.textContent = state.sites.length;
+    UI.projectsCount.textContent = state.projects.length;
     UI.clearSearch.hidden = !state.search;
     UI.emptyMessage.textContent = state.search.trim()
       ? 'No matches for “' + state.search.trim() + '”.'
       : 'No matching ' + (websites ? 'websites' : 'projects') + '.';
     UI.search.setAttribute('aria-label', websites ? 'Search websites' : 'Search projects');
-    UI.search.placeholder = 'Search...';
+    UI.search.placeholder = websites ? 'Find a website…' : 'Find a project…';
     const atlasMode = state.view === 'showcase';
     document.body.classList.toggle('atlas-active', atlasMode);
     UI.empty.hidden = state.shown.length !== 0;
-    UI.viewGrid.classList.toggle('active', !atlasMode);
+    UI.viewList.classList.toggle('active', !atlasMode);
     UI.viewAtlas.classList.toggle('active', atlasMode);
-    UI.viewGrid.setAttribute('aria-pressed', String(!atlasMode));
+    UI.viewList.setAttribute('aria-pressed', String(!atlasMode));
     UI.viewAtlas.setAttribute('aria-pressed', String(atlasMode));
     UI.atlas.hidden = !atlasMode || state.shown.length === 0;
-    UI.sitesGrid.hidden = atlasMode || !websites;
-    UI.projectsGrid.hidden = atlasMode || websites;
-    if (websites) {
-      UI.sitesGrid.innerHTML = state.shown.map(sitesCard).join('');
-      UI.projectsGrid.replaceChildren();
-      wireImages(UI.sitesGrid);
-    } else {
-      UI.projectsGrid.innerHTML = state.shown.map(repoRow).join('');
-      UI.sitesGrid.replaceChildren();
-      wireImages(UI.projectsGrid);
-    }
+    renderCollections(atlasMode);
     window.HubAtlas?.update({
       items: state.shown, tab: state.tab, active: atlasMode && state.shown.length > 0
     });
   }
 
   function setView(view) {
-    if (view !== 'grid' && view !== 'showcase') return;
+    if (view !== 'list' && view !== 'showcase') return;
     state.view = view;
-    try { localStorage.setItem('lb-hub-layout-v4', view); } catch {}
     render();
   }
 
@@ -395,11 +376,11 @@
     window.HubExplorer?.open(item);
   }
 
-  function handlePreview(event) {
-    const button = event.target.closest('[data-open]');
+  function handlePreview(event, items) {
+    const button = event.target.closest('[data-project]');
     if (!button) return;
-    const i = Number(button.dataset.open);
-    if (Number.isInteger(i) && state.shown[i]) openPreview(state.shown[i]);
+    const project = items.find(item => (item.repo || item.id) === button.dataset.project);
+    if (project) openPreview(project);
   }
   async function loadVerifiedForges() {
     try {
@@ -525,17 +506,17 @@
     tab.addEventListener('keydown', event => {
       if (!['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
       event.preventDefault();
-      const to = event.key === 'Home' ? 'sites' :
-        event.key === 'End' ? 'projects' :
+      const to = event.key === 'Home' ? 'projects' :
+        event.key === 'End' ? 'sites' :
         state.tab === 'sites' ? 'projects' : 'sites';
       setTab(to);
       (to === 'sites' ? UI.sitesTab : UI.projectsTab).focus();
     });
   }
-  UI.viewGrid.addEventListener('click', () => setView('grid'));
+  UI.viewList.addEventListener('click', () => setView('list'));
   UI.viewAtlas.addEventListener('click', () => setView('showcase'));
   window.addEventListener('hashchange', () =>
-    setTab(location.hash === '#projects' ? 'projects' : 'sites', false));
+    setTab(location.hash === '#sites' ? 'sites' : 'projects', false));
   UI.search.addEventListener('input', e => { state.search = e.target.value; render(); });
   UI.search.addEventListener('keydown', event => {
     if (event.key === 'Escape' && UI.search.value) {
@@ -545,8 +526,7 @@
       if (state.shown.length === 1) openPreview(state.shown[0]);
       else {
         const target = state.view === 'showcase'
-          ? SELECT('atlasSelect') : (state.tab === 'sites'
-            ? UI.sitesGrid : UI.projectsGrid).querySelector('.preview-button,.project-preview');
+          ? SELECT('atlasSelect') : UI.projectsList.querySelector('[data-project]');
         target?.focus({preventScroll: false});
       }
     }
@@ -559,8 +539,8 @@
   });
   UI.category.addEventListener('change', e => { state.category = e.target.value; render(); });
   UI.sort.addEventListener('change', e => { state.sort = e.target.value; render(); });
-  UI.sitesGrid.addEventListener('click', handlePreview);
-  UI.projectsGrid.addEventListener('click', handlePreview);
+  UI.pinned.addEventListener('click', event => handlePreview(event, state.projects));
+  UI.projectsList.addEventListener('click', event => handlePreview(event, state.shown));
   UI.clear.addEventListener('click', () => { clearFilters(); UI.search.focus(); });
   UI.clearSearch.addEventListener('click', clearSearch);
   // The detail dialog is owned by explorer.js (including its keyboard controls).
@@ -580,6 +560,7 @@
       });
     },
     favicon: faviconFor,
+    website: websiteFor,
     date: dateLabel,
     forges: forgeMarkup,
     forgeLinks: getForgeTargets,
@@ -638,14 +619,9 @@
   // A previous version offered light mode; ignore any stored preference.
   document.documentElement.removeAttribute('data-theme');
   try { localStorage.removeItem('lb-hub-theme'); } catch {}
-  // New visual collection starts in Grid. Only this version's choice is kept.
-  try {
-    state.view = localStorage.getItem('lb-hub-layout-v4') === 'showcase'
-      ? 'showcase' : 'grid';
-  } catch {}
   render();
   // Pre-warm both scene roots after their local data and image catalogue load.
-  // This runs while Grid is visible, so changing tabs never restarts WebGL.
+  // This runs while the list is visible, so changing tabs never restarts WebGL.
   void Promise.allSettled([
     loadProjectMetadata(),loadSites(),loadCoverIndex()
   ]).then(()=>window.HubAtlas?.prepare());

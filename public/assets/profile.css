@@ -1,0 +1,432 @@
+:root {
+  --bg: #121617;
+  --text: #eef3f0;
+  --body: #b6c2be;
+  --muted: #a3b1ac;
+  --faint: #92a39d;
+  --line: #303b38;
+  --frame: #1a2120;
+  --frame-inner: #141918;
+  --hover: #24312d;
+  --accent: #a5dac6;
+}
+
+.container {
+  width: 100%;
+  max-width: 1272px;
+  padding-inline: clamp(16px, 3.4vw, 42px);
+}
+
+.header .brand .brand-name {
+  color: var(--text);
+  font: 600 14px/1.2 Consolas, "Liberation Mono", monospace;
+  letter-spacing: -.035em;
+}
+
+.profile-intro {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 24px;
+  padding-block: 38px 36px;
+  border-bottom: 1px solid var(--line);
+}
+
+.profile-avatar {
+  display: block;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+}
+
+.profile-copy h1 {
+  margin: 0;
+  font: 630 clamp(36px, 4.5vw, 58px)/1 "Segoe UI Variable Display", "Segoe UI", sans-serif;
+  letter-spacing: -.06em;
+}
+
+.profile-handle {
+  margin: 6px 0 0;
+  color: var(--accent);
+  font: 13px/1.5 Consolas, "Liberation Mono", monospace;
+}
+
+.profile-bio {
+  margin: 9px 0 0;
+  color: var(--body);
+  font-size: 15px;
+}
+
+.profile-sources,
+.repository-sources {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+
+.profile-sources {
+  gap: 6px;
+}
+
+.profile-sources a,
+.repository-sources .source-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  color: var(--body);
+  font-size: 12px;
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+.profile-sources a {
+  min-height: 36px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+}
+
+.profile-sources a:hover {
+  background: var(--hover);
+}
+
+.profile-sources a:hover,
+.repository-sources a:hover,
+.repository-visit:hover,
+.repository-title button:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.profile-sources .forge-symbol,
+.repository-sources .forge-symbol {
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+}
+
+.repository-sources .source-unavailable {
+  color: var(--faint);
+}
+
+.pinned-section {
+  padding: 27px 0 32px;
+}
+
+.pinned-section h2,
+.directory h2 {
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.3;
+  font-weight: 620;
+  letter-spacing: -.035em;
+}
+
+.pinned-projects {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 13px;
+}
+
+.pinned-project {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--frame);
+}
+
+.pinned-preview {
+  min-width: 0;
+  height: 114px;
+  border-bottom: 1px solid var(--line);
+}
+
+.pinned-preview .preview-window {
+  border: 0;
+  border-radius: 0;
+}
+
+.pinned-preview img {
+  object-position: center 32%;
+}
+
+.pinned-preview .preview-window.has-image > .preview-placeholder {
+  display: none;
+}
+
+.pinned-content {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  padding: 12px 13px 10px;
+}
+
+.pinned-content .repository-sources {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.pinned-title,
+.repository-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 9px;
+}
+
+.pinned-title {
+  justify-content: space-between;
+}
+
+.repository-title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -.025em;
+}
+
+.repository-title button {
+  min-height: 26px;
+  padding: 0;
+  border: 0;
+  color: var(--text);
+  background: none;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+.repository-description {
+  margin: 4px 0 0;
+  color: var(--body);
+  font-size: 13px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.repository-visit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 27px;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 550;
+  white-space: nowrap;
+}
+
+.collection-navigation,
+body.atlas-active .collection-navigation {
+  min-height: 56px;
+  height: auto;
+  gap: 16px;
+}
+
+.collection-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px 24px;
+  min-width: 0;
+}
+
+.collection-controls .directory-tabs {
+  align-items: center;
+  gap: 15px;
+}
+
+.collection-controls .directory-tabs .tab {
+  margin: 0;
+  padding: 6px 1px;
+  min-height: 34px;
+  white-space: nowrap;
+}
+
+.collection-controls .directory-tabs .tab.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.collection-controls .view-switch {
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.collection-controls .view-switch .view-switch-button {
+  min-height: 30px;
+  border-radius: 4px;
+}
+
+.directory .toolbar .search-field,
+.directory .toolbar .selector select {
+  border-radius: 6px;
+}
+
+.projects-list {
+  border-top: 1px solid var(--line);
+}
+
+.repository-entry {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 6px 24px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.repository-info {
+  min-width: 0;
+}
+
+.repository-entry .repository-sources {
+  justify-content: flex-end;
+}
+
+.repository-category,
+.repository-version {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.repository-meta {
+  display: flex;
+  align-items: center;
+  min-height: 0;
+  gap: 10px;
+  margin-top: 3px;
+}
+
+.repository-meta:empty {
+  display: none;
+}
+
+.repository-version {
+  font-family: Consolas, "Liberation Mono", monospace;
+}
+
+.atlas-repository-links {
+  flex: 0 0 auto;
+  margin-bottom: 8px;
+}
+
+body.atlas-active .profile-intro {
+  padding-block: 18px;
+}
+
+body.atlas-active .profile-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+}
+
+body.atlas-active .profile-copy h1 {
+  font-size: 27px;
+}
+
+body.atlas-active .profile-bio {
+  display: none;
+}
+
+body.atlas-active .atlas-inspector .atlas-inspector-title-wrap {
+  padding-block: 10px;
+}
+
+@media (max-width: 1080px) {
+  .pinned-projects {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .profile-intro {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 14px;
+    padding-block: 24px;
+  }
+
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 15px;
+  }
+
+  .profile-sources {
+    grid-column: 1 / -1;
+  }
+
+  .repository-entry {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .repository-entry .repository-sources {
+    justify-content: flex-start;
+  }
+
+  body.atlas-active .profile-sources {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  .pinned-section {
+    padding-block: 22px;
+  }
+
+  .pinned-projects {
+    gap: 8px;
+  }
+
+  .pinned-preview {
+    display: none;
+  }
+
+  .pinned-project .repository-title {
+    font-size: 15px;
+  }
+
+  .pinned-content {
+    padding: 8px 10px;
+  }
+
+  .pinned-content .repository-sources {
+    gap: 0 8px;
+  }
+
+  .collection-navigation,
+  body.atlas-active .collection-navigation {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding-bottom: 5px;
+  }
+
+  .collection-controls {
+    gap: 4px;
+  }
+
+  .collection-controls .directory-tabs {
+    gap: 9px;
+  }
+}
+
+@media (max-width: 360px) {
+  .profile-sources a {
+    padding-inline: 6px;
+    gap: 4px;
+  }
+
+  .pinned-projects {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

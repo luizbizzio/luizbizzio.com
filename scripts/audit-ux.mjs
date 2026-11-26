@@ -42,42 +42,38 @@ try {
       window.HubDirectory?.projects()?.length===32);
     await page.addScriptTag({content:axe.source});
     const scenarios=[
-      {tab:'sites',view:'showcase'},{tab:'sites',view:'grid'},
-      {tab:'projects',view:'grid'},{tab:'projects',view:'showcase'}
+      {tab:'projects',view:'list'},{tab:'sites',view:'list'},
+      {tab:'sites',view:'showcase'},{tab:'projects',view:'showcase'}
     ];
     for(const scenario of scenarios) {
       await page.locator('#'+(scenario.tab==='sites'?'sitesTab':'projectsTab')).click();
-      await page.locator('#'+(scenario.view==='grid'?'viewGrid':'viewAtlas')).click();
+      await page.locator('#'+(scenario.view==='list'?'viewList':'viewAtlas')).click();
       if(scenario.view==='showcase') {
         await page.locator('#atlasCanvas canvas.atlas-webgl')
           .waitFor({state:'visible',timeout:15000});
         await page.waitForFunction(()=>window.HubAtlas.debug().hasTexture,
           null,{timeout:12000}).catch(()=>{});
       } else {
-        const gridSelector='#'+(scenario.tab==='sites'?'sitesGrid':'projectsGrid');
-        await page.locator(gridSelector+' .work-card').first().waitFor({state:'visible'});
-        await page.waitForFunction(selector => {
-          const images=[...document.querySelectorAll(selector+' .work-card img[data-sources]')].slice(0,2);
+        await page.locator('#projectsList .repository-entry').first().waitFor({state:'visible'});
+        await page.waitForFunction(() => {
+          const images=[...document.querySelectorAll('#pinnedProjects img[data-sources]')].slice(0,2);
           return images.length>0 && images.every(img =>
-            img.complete && img.naturalWidth>0 &&
-            img.classList.contains('is-loaded') &&
-            Number.parseFloat(getComputedStyle(img).opacity)>=.98);
-        },gridSelector,{timeout:15000});
+            img.complete && img.naturalWidth>0 && img.classList.contains('is-loaded'));
+        },null,{timeout:15000});
       }
+      await page.evaluate(() => window.scrollTo({top:0,behavior:'instant'}));
       const screenshotPath = fileURLToPath(new URL(size.name+'-'+scenario.tab+'-'+scenario.view+'.png',output));
       await page.screenshot({path:screenshotPath,animations:'disabled',timeout:15000,fullPage:false});
       const metrics=await page.evaluate(()=>{
         const nodes=[...document.querySelectorAll(
-          '.work-card:not([hidden]) .work-content')].filter(el=>el.getClientRects().length);
+          '.pinned-project,.repository-entry')].filter(el=>el.getClientRects().length);
         const clipped=nodes.filter(el=>{
-          const last=el.querySelector('.work-source-row');
+          const last=el.querySelector('.repository-sources');
           if(!last)return false;
           return last.getBoundingClientRect().bottom > el.getBoundingClientRect().bottom + 2;
         }).length;
-        const grid=Array.from(document.querySelectorAll('.sites-grid,.projects-grid'))
-          .find(el=>!el.hidden);
         const markers=[...document.querySelectorAll('#atlasPagination .atlas-marker')];
-        const smallControls=[...document.querySelectorAll('.work-source-row .forge-link')]
+        const smallControls=[...document.querySelectorAll('a.source-link')]
           .filter(el=>el.getClientRects().length).filter(el=>{
             const box=el.getBoundingClientRect();return box.width<24||box.height<24;
           }).length;
@@ -85,7 +81,6 @@ try {
           scrollWidth:document.documentElement.scrollWidth,
           viewportWidth:innerWidth,
           scrollHeight:document.documentElement.scrollHeight,
-          columns:grid?getComputedStyle(grid).gridTemplateColumns.split(' ').length:0,
           clippedCardFooters:clipped,
           undersizedForgeLinks:smallControls,
           visibleMarkers:markers.filter(el=>el.getClientRects().length).length,

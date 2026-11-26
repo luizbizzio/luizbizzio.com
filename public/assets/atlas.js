@@ -11,7 +11,7 @@
     count: $('atlasCount'), status: $('atlasStatus'), index: $('atlasSelectedIndex'),
     category: $('atlasCategory'), title: $('atlasTitle'),
     description: $('atlasDescription'), created: $('atlasCreated'),
-    updated: $('atlasUpdated'), favicon: $('atlasFavicon'), identity: $('atlasIdentityForges'),
+    updated: $('atlasUpdated'), favicon: $('atlasFavicon'), repositoryLinks: $('atlasRepositoryLinks'),
     explore: $('atlasExplore'), quickExplore: $('atlasQuickExplore'),
     visit: $('atlasVisit'), select: $('atlasSelect'), prev: $('atlasPrev'),
     next: $('atlasNext'), pagination: $('atlasPagination'),
@@ -77,7 +77,7 @@
     });
     el.created.textContent = displayDate(item.created);
     el.updated.textContent = displayDate(item.updated);
-    const website = item.kind === 'site';
+    const website = source()?.website(item);
     // The website favicon identifies the title in the right-hand inspector.
     // Keep the 3D screenshot entirely free of badges and floating geometry.
     const icon = website ? source()?.favicon(item) : '';
@@ -88,10 +88,8 @@
       };
       el.favicon.src = icon;
     } else el.favicon.removeAttribute('src');
-    // The detail view contains repository mirrors, so the 3D inspector
-    // displays each project name and action once.
-    el.identity.hidden = true;
-    el.identity.replaceChildren();
+    el.repositoryLinks.innerHTML = source()?.forges(item) || '';
+    el.repositoryLinks.hidden = !el.repositoryLinks.firstElementChild;
     el.category.textContent = (item.category || 'OTHER').toUpperCase();
     el.category.style.setProperty('--atlas-category-color', color);
     // The title already identifies the selected item; keep the navigation
@@ -102,10 +100,13 @@
       String(state.items.length).padStart(2, '0');
     el.collection.textContent = state.tab === 'sites' ? 'WEBSITES' : 'REPOSITORIES';
     el.progress.style.width = ((state.selected + 1) / state.items.length * 100) + '%';
-    el.visit.href = item.url;
-    el.visit.innerHTML = 'Open <span aria-hidden="true">↗</span>';
-    el.visit.setAttribute('aria-label',
-      (website ? 'Open website for ' : 'Open repository for ') + item.name);
+    el.visit.hidden = !website;
+    if (website) {
+      el.visit.href = website.url;
+      el.visit.setAttribute('aria-label', 'Visit ' + item.name + ' website');
+    } else {
+      el.visit.removeAttribute('href');
+    }
     el.pagination.hidden = !state.active || state.items.length <= 1;
     renderPagination();
     el.prev.disabled = state.items.length <= 1;
