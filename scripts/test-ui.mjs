@@ -64,14 +64,20 @@ try {
     assert.deepEqual(links.map(([,host]) => host), ['github.com', 'gitlab.com', 'codeberg.org']);
     assert(links.every(([, , path]) => path.toLowerCase() === '/luizbizzio/' + name.toLowerCase()));
   }
+  await page.waitForFunction(() => document.querySelectorAll('#projectsList .repository-preview').length === 32);
   const previewSlugs = await projects.locator('.repository-preview').evaluateAll(
-    previews => previews.map(preview => preview.dataset.project).sort());
-  assert.deepEqual(previewSlugs, [
-    'codepuff', 'mypixel', 'scandeck', 'uninstall-here', 'urlforge', 'voicebuffer', 'windhawk-inspector'
-  ]);
+    previews => previews.map(preview => preview.dataset.project));
+  assert.deepEqual(previewSlugs.sort(), repos.map(repo => repo.name).sort());
+  await page.locator('#recentReleases').waitFor({state: 'visible'});
+  await projects.locator('.repository-preview img').evaluateAll(images => {
+    for (const image of images) image.loading = 'eager';
+  });
+  await page.waitForFunction(() => {
+    const images = [...document.querySelectorAll('#projectsList .repository-preview img')];
+    return images.length === 32 && images.every(image => image.complete && image.naturalWidth > 0);
+  });
   const codepuffImage = projects.locator('.repository-preview[data-project="codepuff"] img');
   assert.equal(await codepuffImage.getAttribute('src'), './previews/covers/codepuff.png');
-  await codepuffImage.evaluate(img => img.decode());
   const releases = await page.evaluate(async () => {
     const response = await fetch('./project-metadata.json');
     const {repos} = await response.json();

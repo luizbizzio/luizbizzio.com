@@ -72,10 +72,6 @@
     'task-manager-pause-button':'task-manager-pause-button.png',
     'recycle-bin-file-preview':'recycle-bin-file-preview.png'
   };
-  const INLINE_PREVIEWS = new Set([
-    'codepuff', 'voicebuffer', 'uninstall-here', 'urlforge',
-    'scandeck', 'mypixel', 'windhawk-inspector'
-  ]);
   const SELECT = id => document.getElementById(id);
   const UI = {
     sitesTab: SELECT('sitesTab'), projectsTab: SELECT('projectsTab'),
@@ -209,11 +205,10 @@
   }
 
   function repositoryPreview(item) {
-    if (item.kind !== 'site' && !INLINE_PREVIEWS.has(item.repo)) return '';
     const images = imageSources(item);
     if (!images.length) return '';
     return '<button type="button" class="repository-preview" data-project="' +
-      escapeHTML(item.repo) + '" aria-label="Open preview for ' + escapeHTML(item.name) + '">' +
+      escapeHTML(item.repo || item.id) + '" aria-label="Open preview for ' + escapeHTML(item.name) + '">' +
       '<img src="' + escapeHTML(images[0]) + '" data-preview-sources="' +
       escapeHTML(JSON.stringify(images)) + '" alt="" loading="lazy" decoding="async">' +
       '<span class="preview-expand" aria-hidden="true">⤢</span></button>';
