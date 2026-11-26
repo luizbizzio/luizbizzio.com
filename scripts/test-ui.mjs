@@ -79,6 +79,11 @@ try {
   const codepuffImage = projects.locator('.repository-preview[data-project="codepuff"] img');
   assert.equal(await codepuffImage.getAttribute('src'), './previews/covers/codepuff.png');
   assert.equal(await codepuffImage.evaluate(image => getComputedStyle(image).objectFit), 'contain');
+  const taskManager = projects.filter({
+    has: page.getByRole('button', {name: 'task-manager-pause-button', exact: true})
+  });
+  assert.equal(await taskManager.locator('.repository-description').innerText(),
+    'Adds a Pause button to Windows Task Manager.');
   const releases = await page.evaluate(async () => {
     const response = await fetch('./project-metadata.json');
     const {repos} = await response.json();

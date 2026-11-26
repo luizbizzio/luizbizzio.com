@@ -22,32 +22,32 @@
     ['mypixel', 'A browser-based pixel art editor and exporter.', 'Tools'],
     ['windhawk-inspector', 'Analyze Windhawk mod source code and compare versions.', 'Windhawk'],
     ['windhawk-badges', 'Create dynamic SVG badges for Windhawk mods.', 'Windhawk'],
-    ['archive-preview', 'Browse compressed archives in Windows File Explorer.', 'Windhawk'],
-    ['taskbar-zones', 'Arrange Windows taskbar apps into custom zones.', 'Windhawk'],
-    ['task-manager-pause-button', 'Pause and resume processes from Task Manager.', 'Windhawk'],
+    ['archive-preview', 'Preview and extract archives in File Explorer.', 'Windhawk'],
+    ['taskbar-zones', 'Keep apps in left and right zones on the Windows taskbar.', 'Windhawk'],
+    ['task-manager-pause-button', 'Adds a Pause button to Windows Task Manager.', 'Windhawk'],
     ['recycle-bin-file-preview', 'Preview deleted files in Windows Recycle Bin.', 'Windhawk'],
     ['refreshrate', 'Measure screen refresh rate and motion.', 'Tools'],
     ['siteguard', 'Browser-side controls for casual content inspection.', 'Tools'],
     ['capybara', 'A small browser click game.', 'Games'],
-    ['BannerlordFG', 'Install frame-generation tools for Bannerlord.', 'Tools'],
-    ['grafana-all-in-one', 'An all-in-one Grafana monitoring setup.', 'Hardware'],
-    ['grafana-wallpaper', 'Display Grafana dashboards on your desktop.', 'Hardware'],
+    ['BannerlordFG', 'Adds frame generation and FSR 3.1 to Mount & Blade II: Bannerlord.', 'Tools'],
+    ['grafana-all-in-one', 'A Grafana dashboard for homelab devices and energy use.', 'Hardware'],
+    ['grafana-wallpaper', 'A guide to using a Grafana dashboard as your wallpaper.', 'Hardware'],
     ['tuya-smart-plug-exporter', 'Export smart plug metrics to Prometheus.', 'Hardware'],
     ['solis-inverter-exporter', 'Export solar inverter metrics to Prometheus.', 'Hardware'],
     ['currency-exchange-exporter', 'Export currency exchange rates to Prometheus.', 'Tools'],
-    ['windows-auto-hotspot', 'Manage a Windows Wi-Fi hotspot.', 'Tools'],
-    ['tailscale-mtu', 'Manage Tailscale MTU settings.', 'Tools'],
-    ['local-https', 'Configure HTTPS for local network services.', 'Tools'],
-    ['tailscale-control', 'Control Tailscale from the Windows tray.', 'Tools'],
-    ['one-click-bios', 'Open BIOS / UEFI settings in one click.', 'Hardware'],
-    ['git-history-reset', 'Reset a Git repository history.', 'Tools'],
-    ['silent-chipolo', 'A guide to quieting a Chipolo tracker.', 'Hardware'],
-    ['emojis', 'A guide to emoji artwork and licenses.', 'Other'],
-    ['lune-bot', 'A WhatsApp bot project.', 'Other', true],
-    ['power-alert', 'A system for power outage alerts.', 'Hardware', true],
-    ['knight-adventures', 'Game installation and walkthrough.', 'Games', true],
-    ['codepuff', 'A pixel-art coding pet that reacts to your coding agent.', 'Tools'],
-    ['voicebuffer', 'Adjust the incoming voice buffer in Discord Desktop.', 'Tools'],
+    ['windows-auto-hotspot', 'Turns the Windows Wi-Fi hotspot on and off based on Ethernet.', 'Tools'],
+    ['tailscale-mtu', 'Keeps Tailscale MTU settings across reboots on Windows and Linux.', 'Tools'],
+    ['local-https', 'Set up trusted HTTPS for services on your local network.', 'Tools'],
+    ['tailscale-control', 'Manage Tailscale from the Windows tray.', 'Tools'],
+    ['one-click-bios', 'Restart Windows directly into BIOS or UEFI setup.', 'Hardware'],
+    ['git-history-reset', 'Reset a Git repository to one commit and keep a backup.', 'Tools'],
+    ['silent-chipolo', 'A photo guide to removing the Chipolo LOOP speaker.', 'Hardware'],
+    ['emojis', 'A guide to emoji licenses.', 'Other'],
+    ['lune-bot', 'A WhatsApp bot for group moderation and games.', 'Other', true],
+    ['power-alert', 'Sends an email when the power goes out or comes back.', 'Hardware', true],
+    ['knight-adventures', 'A retro 2D platformer about a knight on a strange journey.', 'Games', true],
+    ['codepuff', 'A pixel-art pet that reacts to Claude Code and Codex.', 'Tools'],
+    ['voicebuffer', 'Adjusts the incoming voice buffer in Discord Desktop.', 'Tools'],
     ['uninstall-here', 'Open app uninstallers directly from the Windows 11 Start menu.', 'Windhawk'],
     ['urlforge', 'Compress long URLs into self-contained links in your browser.', 'Tools']
   ];
@@ -84,8 +84,8 @@
     empty: SELECT('emptyState'), clear: SELECT('clearButton')
   };
   const niceName = name => TITLE[name] || name.replace(/[-_]+/g, ' ').replace(/\b[a-z]/g, c => c.toUpperCase());
-  const knownProjects = KNOWN.map(([repo, description, category, archived]) => ({
-    kind: 'repo', repo, name: niceName(repo), description, category,
+  const knownProjects = KNOWN.map(([repo, summary, category, archived]) => ({
+    kind: 'repo', repo, name: niceName(repo), summary, description: summary, category,
     archived: !!archived, created: '', updated: '', url: GH + encodeURIComponent(repo)
   }));
   const state = {
@@ -152,12 +152,11 @@
 
   function forgeMarkup(item) {
     const links = getForgeTargets(item).map(({provider, label, url, verified}) => {
-      const icon = '<span class="forge-symbol forge-' + provider + '" aria-hidden="true"></span>';
       if (!verified) return '<span class="source-link source-unavailable" title="' +
-        label + ' mirror unavailable">' + icon + label + '<span class="sr-only"> mirror unavailable</span></span>';
+        label + ' mirror unavailable">' + label + '<span class="sr-only"> mirror unavailable</span></span>';
       return '<a class="source-link" data-forge="' + provider + '" href="' + escapeHTML(url) +
         '" target="_blank" rel="noopener noreferrer" aria-label="' + label + ' for ' +
-        escapeHTML(item.name) + '">' + icon + label + '</a>';
+        escapeHTML(item.name) + '">' + label + '</a>';
     });
     return links.length ? '<div class="repository-sources" role="group" aria-label="Source repositories">' +
       links.join('') + '</div>' : '';
@@ -210,18 +209,18 @@
     return '<button type="button" class="repository-preview" data-project="' +
       escapeHTML(item.repo || item.id) + '" aria-label="Open preview for ' + escapeHTML(item.name) + '">' +
       '<img src="' + escapeHTML(images[0]) + '" data-preview-sources="' +
-      escapeHTML(JSON.stringify(images)) + '" alt="" loading="lazy" decoding="async">' +
-      '<span class="preview-expand" aria-hidden="true">⤢</span></button>';
+      escapeHTML(JSON.stringify(images)) + '" alt="" loading="lazy" decoding="async"></button>';
   }
 
   function repositoryRow(item) {
     const status = item.archived ? 'Archived' : item.release;
     const preview = repositoryPreview(item);
+    const description = websiteFor(item)?.description || item.summary || item.description;
     return '<article class="repository-entry' + (preview ? ' has-preview' : '') +
       '" aria-label="' + escapeHTML(item.name) + '">' +
       '<div class="repository-info"><div class="repository-heading">' + projectHeading(item) +
       '<span class="repository-category">' + escapeHTML(item.category) + '</span></div>' +
-      '<p class="repository-description">' + escapeHTML(item.description) + '</p>' +
+      '<p class="repository-description">' + escapeHTML(description) + '</p>' +
       '<div class="repository-meta">' + liveLink(item) +
       (status ? '<span class="repository-version">' + escapeHTML(status) + '</span>' : '') +
       '</div>' + forgeMarkup(item) + '</div>' + preview + '</article>';
@@ -232,7 +231,7 @@
     const q = state.search.trim().toLocaleLowerCase();
     return items.filter(item =>
       (state.category === 'All' || state.category === item.category) &&
-      (!q || [item.name,item.description,item.category,item.repo,item.url,websiteFor(item)?.url]
+      (!q || [item.name,item.summary,item.description,item.category,item.repo,item.url,websiteFor(item)?.url]
         .some(v => String(v ?? '').toLocaleLowerCase().includes(q))))
       .sort((a, b) => {
         const byName = repositoryName(a).localeCompare(repositoryName(b));

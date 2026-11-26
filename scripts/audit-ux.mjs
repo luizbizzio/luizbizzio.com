@@ -45,7 +45,10 @@ try {
       await page.locator(tab === 'sites' ? '#sitesTab' : '#projectsTab').click();
       await page.locator('#projectsList .repository-entry').first().waitFor({state:'visible'});
       await page.locator('#recentReleases').waitFor({state:'visible'});
-      await page.locator('.repository-preview img').first().evaluate(img => img.decode());
+      await page.waitForFunction(() => {
+        const image = document.querySelector('.repository-preview img');
+        return image?.complete && image.naturalWidth > 0;
+      });
       await page.evaluate(() => window.scrollTo({top:0,behavior:'instant'}));
       const screenshotPath = fileURLToPath(new URL(size.name + '-' + tab + '-list.png',output));
       await page.screenshot({path:screenshotPath,animations:'disabled',timeout:15000,fullPage:false});
