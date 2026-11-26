@@ -64,6 +64,14 @@ try {
     assert.deepEqual(links.map(([,host]) => host), ['github.com', 'gitlab.com', 'codeberg.org']);
     assert(links.every(([, , path]) => path.toLowerCase() === '/luizbizzio/' + name.toLowerCase()));
   }
+  const previewSlugs = await projects.locator('.repository-preview').evaluateAll(
+    previews => previews.map(preview => preview.dataset.project).sort());
+  assert.deepEqual(previewSlugs, [
+    'codepuff', 'mypixel', 'scandeck', 'uninstall-here', 'urlforge', 'voicebuffer', 'windhawk-inspector'
+  ]);
+  const codepuffImage = projects.locator('.repository-preview[data-project="codepuff"] img');
+  assert.equal(await codepuffImage.getAttribute('src'), './previews/covers/codepuff.png');
+  await codepuffImage.evaluate(img => img.decode());
   const releases = await page.evaluate(async () => {
     const response = await fetch('./project-metadata.json');
     const {repos} = await response.json();
@@ -86,7 +94,7 @@ try {
   const urlforge = projects.filter({has: page.getByRole('heading', {name: 'urlforge', exact: true})});
   assert.equal(await urlforge.locator('.repository-visit').getAttribute('href'), 'https://uf.do/');
   assert.equal(await projects.locator('.repository-visit').count(), 8);
-  await urlforge.getByRole('button', {name:'urlforge', exact:true}).click();
+  await urlforge.getByRole('button', {name:'Open preview for URLForge', exact:true}).click();
   assert(await page.locator('#previewDialog').isVisible());
   assert.equal(await page.locator('#previewTitle').innerText(), 'URLForge');
   assert.equal(await page.locator('#detailLinks .detail-primary').getAttribute('href'), 'https://uf.do/');
@@ -155,6 +163,11 @@ try {
   assert(await m.locator('.profile-intro').evaluate(sidebar =>
     sidebar.getBoundingClientRect().bottom < document.querySelector('.profile-content').getBoundingClientRect().top));
   assert.equal(await m.locator('#projectsList .repository-entry').count(), 32);
+  const releasesPanel = m.locator('#releasesPanel');
+  assert.equal(await releasesPanel.getAttribute('open'), null);
+  await releasesPanel.locator('summary').click();
+  assert(await releasesPanel.locator('.release-link').first().isVisible());
+  await releasesPanel.locator('summary').click();
   assert(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2));
   assert(await m.locator('#projectsList a.source-link').first().evaluate(el => {
     const rect = el.getBoundingClientRect();
@@ -162,7 +175,8 @@ try {
   }), 'All mobile source links should be tappable');
   await m.locator('#sitesTab').click();
   assert.equal(await m.locator('#projectsList .repository-entry').count(), 8);
-  const mypixel = m.locator('#projectsList [data-project="mypixel"]');
+  assert.equal(await m.locator('#projectsList .repository-preview').count(), 8);
+  const mypixel = m.getByRole('button', {name:'Open preview for MyPixel', exact:true});
   await mypixel.click();
   assert(await m.locator('#previewDialog').isVisible());
   assert.equal(await m.locator('#previewTitle').innerText(), 'MyPixel');
@@ -171,7 +185,7 @@ try {
   assert.deepEqual(mobile.apiCalls, [], 'Mobile catalog must work without GitHub API requests');
   await m.close();
 
-  console.log('PASS: profile layout, latest releases, source mirrors, search, filters, details and mobile');
+  console.log('PASS: profile layout, previews, releases, source mirrors, search, filters, details and mobile');
 } finally {
   await browser?.close();
   server.kill('SIGTERM');

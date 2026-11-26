@@ -58,6 +58,8 @@
   };
   const COVER_FILES = {
     mypixel: 'mypixel.jpg', refreshrate:'refreshrate.png',
+    codepuff: 'codepuff.png', voicebuffer: 'voicebuffer.png',
+    'uninstall-here': 'uninstall-here.png',
     'silent-chipolo':'silent-chipolo.jpg',
     'tailscale-control':'tailscale-control.webp',
     'solis-inverter-exporter':'solis-inverter-exporter.png',
@@ -70,6 +72,10 @@
     'task-manager-pause-button':'task-manager-pause-button.png',
     'recycle-bin-file-preview':'recycle-bin-file-preview.png'
   };
+  const INLINE_PREVIEWS = new Set([
+    'codepuff', 'voicebuffer', 'uninstall-here', 'urlforge',
+    'scandeck', 'mypixel', 'windhawk-inspector'
+  ]);
   const SELECT = id => document.getElementById(id);
   const UI = {
     sitesTab: SELECT('sitesTab'), projectsTab: SELECT('projectsTab'),
@@ -109,7 +115,9 @@
     return isHttps(url) || /^\.\/icons\/[a-z0-9._-]+\.(svg|png)$/i.test(url || '');
   }
 
-  const WEBSITE_COVERS = new Set(['scandeck','windhawk-badges','windhawk-inspector','siteguard','urlforge']);
+  const WEBSITE_COVERS = new Set([
+    'scandeck', 'mypixel', 'windhawk-badges', 'windhawk-inspector', 'siteguard', 'urlforge'
+  ]);
   function imageSources(item) {
     const images = [];
     const site = websiteFor(item);
@@ -200,15 +208,28 @@
     }).join('');
   }
 
+  function repositoryPreview(item) {
+    if (item.kind !== 'site' && !INLINE_PREVIEWS.has(item.repo)) return '';
+    const images = imageSources(item);
+    if (!images.length) return '';
+    return '<button type="button" class="repository-preview" data-project="' +
+      escapeHTML(item.repo) + '" aria-label="Open preview for ' + escapeHTML(item.name) + '">' +
+      '<img src="' + escapeHTML(images[0]) + '" data-preview-sources="' +
+      escapeHTML(JSON.stringify(images)) + '" alt="" loading="lazy" decoding="async">' +
+      '<span class="preview-expand" aria-hidden="true">⤢</span></button>';
+  }
+
   function repositoryRow(item) {
     const status = item.archived ? 'Archived' : item.release;
-    return '<article class="repository-entry" aria-label="' + escapeHTML(item.name) + '">' +
+    const preview = repositoryPreview(item);
+    return '<article class="repository-entry' + (preview ? ' has-preview' : '') +
+      '" aria-label="' + escapeHTML(item.name) + '">' +
       '<div class="repository-info"><div class="repository-heading">' + projectHeading(item) +
       '<span class="repository-category">' + escapeHTML(item.category) + '</span></div>' +
       '<p class="repository-description">' + escapeHTML(item.description) + '</p>' +
       '<div class="repository-meta">' + liveLink(item) +
       (status ? '<span class="repository-version">' + escapeHTML(status) + '</span>' : '') +
-      '</div></div>' + forgeMarkup(item) + '</article>';
+      '</div>' + forgeMarkup(item) + '</div>' + preview + '</article>';
   }
 
   let listMarkup = '';
@@ -445,6 +466,23 @@
   UI.category.addEventListener('change', e => { state.category = e.target.value; render(); });
   UI.sort.addEventListener('change', e => { state.sort = e.target.value; render(); });
   UI.projectsList.addEventListener('click', handlePreview);
+  UI.projectsList.addEventListener('error', event => {
+    const img = event.target;
+    if (!img.matches('img[data-preview-sources]')) return;
+    const images = JSON.parse(img.dataset.previewSources);
+    const next = images.indexOf(img.getAttribute('src')) + 1;
+    if (next < images.length) {
+      img.src = images[next];
+    } else {
+      const preview = img.closest('.repository-preview');
+      const repository = preview.closest('.repository-entry');
+      repository.classList.remove('has-preview');
+      if (document.activeElement === preview) {
+        repository.querySelector('.repository-title button').focus();
+      }
+      preview.remove();
+    }
+  }, true);
   UI.clear.addEventListener('click', () => { clearFilters(); UI.search.focus(); });
   UI.clearSearch.addEventListener('click', clearSearch);
   // The detail dialog is owned by explorer.js (including its keyboard controls).
@@ -505,6 +543,10 @@
   }
 
   SELECT('year').textContent = String(new Date().getFullYear());
+  const releasesPanel = SELECT('releasesPanel');
+  const narrowProfile = matchMedia('(max-width: 760px)');
+  releasesPanel.open = !narrowProfile.matches;
+  narrowProfile.addEventListener('change', event => { releasesPanel.open = !event.matches; });
   // A previous version offered light mode; ignore any stored preference.
   document.documentElement.removeAttribute('data-theme');
   try { localStorage.removeItem('lb-hub-theme'); } catch {}
