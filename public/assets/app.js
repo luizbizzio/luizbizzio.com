@@ -188,7 +188,7 @@
       .filter(item => item.release && Number.isFinite(Date.parse(item.releasePublishedAt)))
       .sort((a, b) => Date.parse(b.releasePublishedAt) - Date.parse(a.releasePublishedAt) ||
         repositoryName(a).localeCompare(repositoryName(b)))
-      .slice(0, 3);
+      .slice(0, 5);
 
     UI.releasesSection.hidden = !releases.length;
     UI.releasesList.innerHTML = releases.map(item => {

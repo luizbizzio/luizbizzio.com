@@ -410,6 +410,12 @@ main.profile-layout {
   color: var(--accent);
 }
 
+@media (max-height: 820px) {
+  .profile-intro {
+    position: static;
+  }
+}
+
 @media (max-width: 760px) {
   main.profile-layout {
     display: block;

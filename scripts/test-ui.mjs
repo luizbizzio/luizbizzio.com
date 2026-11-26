@@ -85,10 +85,10 @@ try {
     return Object.entries(repos)
       .filter(([name, entry]) => name !== 'windhawk-mods' && entry.release && Date.parse(entry.releasePublishedAt))
       .sort((a, b) => Date.parse(b[1].releasePublishedAt) - Date.parse(a[1].releasePublishedAt) ||
-        a[0].localeCompare(b[0])).slice(0, 3);
+      a[0].localeCompare(b[0])).slice(0, 5);
   });
   await page.locator('#recentReleases').waitFor({state: 'visible'});
-  assert.equal(await page.locator('.release-link').count(), 3);
+  assert.equal(await page.locator('.release-link').count(), 5);
   for (const [index, [name, entry]] of releases.entries()) {
     const release = page.locator('.release-link').nth(index);
     assert.equal(await release.locator('.release-repo').innerText(), name);
@@ -148,7 +148,7 @@ try {
   assert.equal(await projects.locator('a.source-link').count(), 24);
   assert.equal(await projects.locator('.repository-visit').count(), 8);
   assert(page.url().endsWith('#sites'));
-  assert.equal(await page.locator('.release-link').count(), 3);
+  assert.equal(await page.locator('.release-link').count(), 5);
   await page.reload();
   await page.waitForFunction(() => window.HubDirectory?.sites().length === 8);
   assert.equal(await projects.count(), 8, 'The Websites deep link still works');
@@ -173,6 +173,7 @@ try {
   const releasesPanel = m.locator('#releasesPanel');
   assert.equal(await releasesPanel.getAttribute('open'), null);
   await releasesPanel.locator('summary').click();
+  assert.equal(await releasesPanel.locator('.release-link').count(), 5);
   assert(await releasesPanel.locator('.release-link').first().isVisible());
   await releasesPanel.locator('summary').click();
   assert(await m.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 2));
