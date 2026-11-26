@@ -78,6 +78,7 @@ try {
   });
   const codepuffImage = projects.locator('.repository-preview[data-project="codepuff"] img');
   assert.equal(await codepuffImage.getAttribute('src'), './previews/covers/codepuff.png');
+  assert.equal(await codepuffImage.evaluate(image => getComputedStyle(image).objectFit), 'contain');
   const releases = await page.evaluate(async () => {
     const response = await fetch('./project-metadata.json');
     const {repos} = await response.json();
