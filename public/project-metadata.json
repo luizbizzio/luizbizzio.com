@@ -1,7 +1,7 @@
 {
   "version": 3,
   "source": "Locally cached public GitHub repository and release metadata",
-  "updatedAt": "2026-11-27T10:05:33.563Z",
+  "updatedAt": "2026-11-27T22:18:02.150Z",
   "repos": {
     "archive-preview": {
       "created": "2026-11-01T00:48:27Z",
@@ -239,11 +239,11 @@
     },
     "uninstall-here": {
       "created": "2026-11-23T13:38:55Z",
-      "updated": "2026-11-25T13:17:59Z",
+      "updated": "2026-11-27T18:41:19Z",
       "description": "⏏️ Open desktop app uninstallers directly from the Windows 11 Start menu, without opening Settings or Control Panel.",
       "archived": false,
-      "release": "v1.0.0",
-      "releasePublishedAt": "2026-11-25T13:17:59Z",
+      "release": "v1.1.0",
+      "releasePublishedAt": "2026-11-27T18:41:19Z",
       "releaseChecked": true
     },
     "urlforge": {
